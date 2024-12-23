@@ -1,0 +1,12 @@
+﻿<RevitAddIns>
+    <AddIn Type="Command">
+        <Name>MakeFamilyBoxes</Name>
+        <Assembly>MakeFamilyBoxes/MakeFamilyBoxes.dll</Assembly>
+        <AddInId>9A698C90-DE3C-456F-88D3-5D12D566A3FF</AddInId>
+        <FullClassName>MakeFamilyBoxes.Commands.StartupCommand</FullClassName>
+        <Text>MakeFamilyBoxes</Text>
+        <VendorId>Development</VendorId>
+        <VendorDescription></VendorDescription>
+        <VendorEmail></VendorEmail>
+    </AddIn>
+</RevitAddIns>
