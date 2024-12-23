@@ -1,5 +1,4 @@
-﻿
-using Autodesk.Revit.DB;
+﻿using Autodesk.Revit.DB;
 using MakeFamilyBoxes.Commands;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
