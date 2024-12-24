@@ -1,13 +1,18 @@
 ﻿using Autodesk.Revit.DB;
 using MakeFamilyBoxes.Commands;
+using MakeFamilyBoxes.Models;
+using MakeFamilyBoxes.Services;
+using MakeFamilyBoxes.ViewModels.Command;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
 
 namespace MakeFamilyBoxes.ViewModels
 {
 
-    public class MakeFamilyBoxesViewModel() : ViewModelBase
+    public class MakeFamilyBoxesViewModel : ViewModelBase
     {
+        private readonly GetRevitDocuments _getRevitDocuments;
         private bool _isAutoPlacementEnabled = false;
         private bool _isManualPlacementEnabled = false;
         private bool _isChoosingById = false;
@@ -17,6 +22,10 @@ namespace MakeFamilyBoxes.ViewModels
         private string _minSizeOfSquareBox = string.Empty;
         private string _boxId = string.Empty;
         private string _offsetFromCuttingEdge = string.Empty;
+        private List<DocumentEntity> _documentEntities = [];
+        private DocumentEntity _selectedHubDocument;
+        private DocumentEntity _selectedEngineersDocument;
+
 
         public bool IsAutoPlacementEnabled
         {
@@ -125,6 +134,42 @@ namespace MakeFamilyBoxes.ViewModels
                     OnPropertyChanged(nameof(BoxId));
                 }
             }
+        }
+        public List<DocumentEntity> DocumentEntities
+        {
+            get => _documentEntities;
+            set
+            {
+                _documentEntities = value;
+                OnPropertyChanged(nameof(DocumentEntities));
+            }
+        }
+        private void GetDocumentEntities()
+        {
+            _documentEntities = _getRevitDocuments.GetRevitDocs(); 
+        }
+        public DocumentEntity SelectedHubDocument
+        {
+            get => _selectedHubDocument;
+            set
+            {
+                _selectedHubDocument = value;
+                OnPropertyChanged(nameof(SelectedHubDocument));
+            }
+        }
+        public DocumentEntity SelectedEngineersDocument
+        {
+            get => _selectedEngineersDocument;
+            set
+            {
+                _selectedEngineersDocument = value;
+                OnPropertyChanged(nameof(_selectedEngineersDocument));
+            }
+        }
+        public MakeFamilyBoxesViewModel(GetRevitDocuments getRevitDocuments)
+        {
+            _getRevitDocuments = getRevitDocuments;
+            GetDocumentEntities();
         }
 
     }

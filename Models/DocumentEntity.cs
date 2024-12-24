@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace MakeFamilyBoxes.Models
 {
-    public class DocumentEntity
+    public class DocumentEntity(string title, int id)
     {
+        public string Title { get; } = title;
+        public int Id { get; } = id;
     }
 }
