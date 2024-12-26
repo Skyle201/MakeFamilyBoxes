@@ -5,6 +5,7 @@ using Autodesk.Revit.UI;
 using MakeFamilyBoxes.Services;
 using MakeFamilyBoxes.ViewModels;
 using MakeFamilyBoxes.Views;
+using System.Windows.Interop;
 
 namespace MakeFamilyBoxes.Commands
 {
@@ -19,8 +20,6 @@ namespace MakeFamilyBoxes.Commands
         ElementSet elements)
         {
             var uiApplication = commandData.Application;
-            //var uiDoc = commandData.Application.ActiveUIDocument;
-            //var doc = uiDoc.Document;
             UIApplication uiApp = commandData.Application;
             Application app = uiApp.Application;
             Docs = app.Documents;
@@ -34,6 +33,8 @@ namespace MakeFamilyBoxes.Commands
             var getFamilyGenericBox = new GetFamilyGenericBox(this);
             var viewModel = new MakeFamilyBoxesViewModel(getRevitDocuments, getFamilyGenericBox);
             var view = new MakeFamilyBoxesView(viewModel);
+            var helper = new WindowInteropHelper(view);
+            view.Topmost = true;
             view.Show();
             return Result.Succeeded;
         }
