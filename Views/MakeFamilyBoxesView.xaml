@@ -9,7 +9,7 @@
     d:DataContext="{d:DesignInstance viewModel:MakeFamilyBoxesViewModel}"
     ResizeMode="NoResize"
     WindowStartupLocation="CenterScreen"
-  Title="Hub Box Manager" Height="600" Width="800" Background="#FFE8E5E4">
+  Title="Hub Box Manager" Height="600" Width="800" Background="#FFFFFCFB">
     <Grid Margin="0,10,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -34,41 +34,49 @@
                 <GroupBox Header="Исходные данные" Margin="5" Width="304" >
                     <StackPanel>
                         <TextBlock Text="Проект HUB (Задание на отверстия)" />
-                        <ComboBox x:Name="HUBProjectComboBox" Margin="0,5,0,10" 
+                        <ComboBox x:Name="HUBProjectComboBox" Margin="0,5,0,5" 
                         ItemsSource="{Binding DocumentEntities}" 
                         DisplayMemberPath="Title"  SelectedItem="{Binding SelectedHubDocument}" />
 
-                        <TextBlock Text="Используемое семейство прямоугольного бокса" />
-                        <ComboBox x:Name="BoxFamilySquareComboBox" Margin="0,5,0,10" />
-
-                        <TextBlock Text="Используемое семейство круглого бокса" />
-                        <ComboBox x:Name="BoxFamilyRoundComboBox" Margin="0,5,0,10" />
 
                         <TextBlock Text="Модели инженерных систем" />
-                        <ComboBox x:Name="SystemModelsComboBox" Margin="0,5,0,10" 
+                        <ComboBox x:Name="SystemModelsComboBox" Margin="0,5,0,5"         
                         ItemsSource="{Binding DocumentEntities}" 
                         DisplayMemberPath="Title"  SelectedItem="{Binding SelectedEngineersDocument}"/>
+
+                        <TextBlock x:Name="BoxFamilySquareComboBox" Text="Используемое семейство прямоугольного бокса" Height="25"/>
+                        <ComboBox ItemsSource="{Binding FamilyEntities}" 
+                                  DisplayMemberPath="Name"
+                        SelectedItem="{Binding SelectedFamilySquareBox}" Margin="0,0,0,5" Height="25">
+                            
+                        </ComboBox>
+                   
+
+                        <TextBlock Text="Используемое семейство круглого бокса" />
+                        <ComboBox x:Name="BoxFamilyRoundComboBox" Margin="0,0,0,5" Height="25"
+                                  ItemsSource="{Binding FamilyEntities}"
+                                  DisplayMemberPath="Name" SelectedItem="{Binding SelectedFamilyRoundBox}"/>
                     </StackPanel>
                 </GroupBox>
             </StackPanel>
-            <GroupBox Header="Управление и параметры размещения боксов" Margin="10,10,130,50" Grid.Column="1">
+            <GroupBox Header="Управление и параметры размещения боксов" Margin="10,10,140,50" Grid.Column="1">
                 <StackPanel>
                     <RadioButton x:Name="AutoPlacementButton" IsChecked="{Binding IsAutoPlacementEnabled}" Content="Автоматическое размещение боксов" GroupName="PlacementOptions" Margin="0,5" Style="{DynamicResource RadioButtonStyle}" />
                     <TextBlock Text="Минимальный размер круглого бокса (мм):" />
-                    <TextBox x:Name="MinRoundBoxSizeInput" Margin="0,5" Text="{Binding MinSizeOfRoundBox, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox x:Name="MinRoundBoxSizeInput" Margin="0,2" Text="{Binding MinSizeOfRoundBox, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock Text="Минимальный размер прямоугольного бокса (мм):" />
-                    <TextBox x:Name="MinSquareBoxSizeInput" Margin="0,5" Text="{Binding MinSizeOfSquareBox, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="MinSquareBoxSizeInput" Margin="0,2" Text="{Binding MinSizeOfSquareBox, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock Text="Отступ от прорезающей конструкции (мм):" />
-                    <TextBox x:Name="OffSetFromCuttingEdge" Margin="0,5" Text="{Binding OffsetFromCuttingEdge, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="OffSetFromCuttingEdge" Margin="0,2" Text="{Binding OffsetFromCuttingEdge, UpdateSourceTrigger=PropertyChanged}"/>
                     <RadioButton x:Name="ManualPlacementButton" IsChecked="{Binding IsManualPlacementEnabled}" Content="Разместить бокс вручную" GroupName="PlacementOptions" Margin="0,5" Style="{DynamicResource RadioButtonStyle}" />
                     <RadioButton x:Name="SelectBoxByIdButton" IsChecked="{Binding IsChoosingById}" Content="Выбрать бокс по ID" GroupName="PlacementOptions" Margin="0,5" Style="{DynamicResource RadioButtonStyle}" />
-                    <TextBox x:Name="BoxId" Margin="0,5" Text="{Binding BoxId, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox x:Name="BoxId" Margin="0,2" Text="{Binding BoxId, UpdateSourceTrigger=PropertyChanged}" />
                     <RadioButton x:Name="CreateSpecificationButton" IsChecked="{Binding IsCreateSpecification}" Content="Создать спецификацию" GroupName="PlacementOptions" Margin="0,5" Style="{DynamicResource RadioButtonStyle}" />
                     <RadioButton x:Name="MergeHolesButton" IsChecked="{Binding IsCombineBoxes}" Content="Объединить отверстия" GroupName="PlacementOptions" Margin="0,5" Style="{DynamicResource RadioButtonStyle}" />
-                    
+
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="Фильтр по материалу" Margin="10,303,10,0">
+            <GroupBox Header="Фильтр по материалу" Margin="5,303,10,0">
                 <StackPanel>
                     <TextBox x:Name="MaterialFilterInput" Margin="0,5,0,10" />
                 </StackPanel>

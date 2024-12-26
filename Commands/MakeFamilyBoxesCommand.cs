@@ -31,9 +31,10 @@ namespace MakeFamilyBoxes.Commands
                 return Result.Failed;
             }
             var getRevitDocuments = new GetRevitDocuments(this);
-            var viewModel = new MakeFamilyBoxesViewModel(getRevitDocuments);
+            var getFamilyGenericBox = new GetFamilyGenericBox(this);
+            var viewModel = new MakeFamilyBoxesViewModel(getRevitDocuments, getFamilyGenericBox);
             var view = new MakeFamilyBoxesView(viewModel);
-            view.ShowDialog();
+            view.Show();
             return Result.Succeeded;
         }
     }

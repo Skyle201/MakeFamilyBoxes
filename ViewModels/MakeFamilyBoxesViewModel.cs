@@ -13,6 +13,7 @@ namespace MakeFamilyBoxes.ViewModels
     public class MakeFamilyBoxesViewModel : ViewModelBase
     {
         private readonly GetRevitDocuments _getRevitDocuments;
+        private readonly GetFamilyGenericBox _getFamilyGenericBox;
         private bool _isAutoPlacementEnabled = false;
         private bool _isManualPlacementEnabled = false;
         private bool _isChoosingById = false;
@@ -25,6 +26,9 @@ namespace MakeFamilyBoxes.ViewModels
         private List<DocumentEntity> _documentEntities = [];
         private DocumentEntity _selectedHubDocument;
         private DocumentEntity _selectedEngineersDocument;
+        private List<FamilyEntity> _familyEntities = [];
+        private FamilyEntity _selectedFamilySquareBox;
+        private FamilyEntity _selectedFamilyRoundBox;
 
 
         public bool IsAutoPlacementEnabled
@@ -144,16 +148,13 @@ namespace MakeFamilyBoxes.ViewModels
                 OnPropertyChanged(nameof(DocumentEntities));
             }
         }
-        private void GetDocumentEntities()
-        {
-            _documentEntities = _getRevitDocuments.GetRevitDocs(); 
-        }
         public DocumentEntity SelectedHubDocument
         {
             get => _selectedHubDocument;
             set
             {
                 _selectedHubDocument = value;
+                GetFamilyEntities(value);
                 OnPropertyChanged(nameof(SelectedHubDocument));
             }
         }
@@ -166,11 +167,49 @@ namespace MakeFamilyBoxes.ViewModels
                 OnPropertyChanged(nameof(_selectedEngineersDocument));
             }
         }
-        public MakeFamilyBoxesViewModel(GetRevitDocuments getRevitDocuments)
+        public List<FamilyEntity> FamilyEntities
+        {
+            get => _familyEntities;
+            set
+            {
+                _familyEntities = value;
+                OnPropertyChanged(nameof(FamilyEntities));
+            }
+        }
+        public FamilyEntity SelectedFamilySquareBox
+        {
+            get => _selectedFamilySquareBox;
+            set
+            {
+                _selectedFamilySquareBox = value;
+                OnPropertyChanged(nameof(SelectedFamilySquareBox));
+            }
+        }
+        public FamilyEntity SelectedFamilyRoundBox
+        {
+            get => _selectedFamilyRoundBox;
+            set
+            {
+                _selectedFamilyRoundBox = value;
+                OnPropertyChanged(nameof(SelectedFamilyRoundBox));
+            }
+        }
+        public MakeFamilyBoxesViewModel(GetRevitDocuments getRevitDocuments, GetFamilyGenericBox getFamilyGenericBox)
         {
             _getRevitDocuments = getRevitDocuments;
+            _getFamilyGenericBox = getFamilyGenericBox;
             GetDocumentEntities();
+
         }
+        private void GetFamilyEntities(DocumentEntity hubdoc)
+        {
+            FamilyEntities = _getFamilyGenericBox.GetFamilyEntities(hubdoc);
+        }
+        private void GetDocumentEntities()
+        {
+            _documentEntities = _getRevitDocuments.GetRevitDocs(); 
+        }
+
 
     }
 }
