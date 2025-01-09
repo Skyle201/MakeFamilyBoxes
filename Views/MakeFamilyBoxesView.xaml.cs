@@ -7,6 +7,7 @@ namespace MakeFamilyBoxes.Views
         public MakeFamilyBoxesView(MakeFamilyBoxesViewModel viewModel)
         {
             DataContext = viewModel;
+            viewModel.CloseRequest = Close;
             InitializeComponent();
         }
     }

@@ -3,8 +3,10 @@ using MakeFamilyBoxes.Commands;
 using MakeFamilyBoxes.Models;
 using MakeFamilyBoxes.Services;
 using MakeFamilyBoxes.ViewModels.Command;
+using MakeFamilyBoxes.Views;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 
 namespace MakeFamilyBoxes.ViewModels
@@ -26,6 +28,7 @@ namespace MakeFamilyBoxes.ViewModels
         private List<DocumentEntity> _documentEntities = [];
         private DocumentEntity _selectedHubDocument;
         private DocumentEntity _selectedEngineersDocument;
+        private DocumentEntity _selectedModelDocument;
         private List<FamilyEntity> _familyEntities = [];
         private FamilyEntity _selectedFamilySquareBox;
         private FamilyEntity _selectedFamilyRoundBox;
@@ -167,6 +170,15 @@ namespace MakeFamilyBoxes.ViewModels
                 OnPropertyChanged(nameof(_selectedEngineersDocument));
             }
         }
+        public DocumentEntity SelectedModelDocument
+        {
+            get => _selectedModelDocument;
+            set
+            {
+                _selectedModelDocument = value;
+                OnPropertyChanged(nameof(_selectedModelDocument));
+            }
+        }
         public List<FamilyEntity> FamilyEntities
         {
             get => _familyEntities;
@@ -196,10 +208,10 @@ namespace MakeFamilyBoxes.ViewModels
         }
         public MakeFamilyBoxesViewModel(GetRevitDocuments getRevitDocuments, GetFamilyGenericBox getFamilyGenericBox)
         {
+            InitOperationCommand = new RelayCommand(InitOperation, null);
             _getRevitDocuments = getRevitDocuments;
             _getFamilyGenericBox = getFamilyGenericBox;
             GetDocumentEntities();
-
         }
         private void GetFamilyEntities(DocumentEntity hubdoc)
         {
@@ -207,9 +219,57 @@ namespace MakeFamilyBoxes.ViewModels
         }
         private void GetDocumentEntities()
         {
-            _documentEntities = _getRevitDocuments.GetRevitDocs(); 
+            _documentEntities = _getRevitDocuments.GetRevitDocs();
         }
+        private void InitOperation(object obj)
+        {
+            List<bool> bools = new List<bool>()
+            { IsAutoPlacementEnabled, IsManualPlacementEnabled, IsChoosingById, IsCreateSpecification, IsCombineBoxes };
+            if (bools.Contains(true))
+            {
+                if (IsAutoPlacementEnabled)
+                {
+                    MessageBox.Show("IsAutoPlacementEnabled");
+                    //  PerformAutoPlacement();
+                }
 
+                if (IsManualPlacementEnabled)
+                {
+                    MessageBox.Show("IsManualPlacementEnabled");
+                    // PerformManualPlacement();
+                }
+
+                if (IsChoosingById)
+                {
+                    MessageBox.Show("IsChoosingById");
+                    // PerformChoosingById();
+                }
+
+                if (IsCreateSpecification)
+                {
+                    MessageBox.Show("IsCreateSpecification");
+                    // CreateSpecification();
+                }
+
+                if (IsCombineBoxes)
+                {
+                    MessageBox.Show("IsCombineBoxes");
+                    //CombineBoxes();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Functions aren't choosed", "Exception");
+            }
+        }
+        private void CancelOperation(object obj)
+        {
+        }
+        public ICommand InitOperationCommand { get; }
+        public ICommand CancelCommand => new RelayCommand(obj =>
+        {
+            CloseRequest.Invoke();
+        });
+    }
 
     }
-}

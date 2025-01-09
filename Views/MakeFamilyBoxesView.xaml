@@ -36,16 +36,20 @@
                     <StackPanel Grid.Column="0" Margin="5,5,0,0" VerticalAlignment="Top" Height="298">
                         <GroupBox Header="Исходные данные" Margin="5" >
                             <StackPanel>
-                                <TextBlock Text="Проект HUB (Задание на отверстия)" />
+                                <TextBlock Text="Модель HUB (Задание на отверстия)" />
                                 <ComboBox x:Name="HUBProjectComboBox" Margin="0,5,0,5" 
                         ItemsSource="{Binding DocumentEntities}" 
                         DisplayMemberPath="Title"  SelectedItem="{Binding SelectedHubDocument}" />
 
 
                                 <TextBlock Text="Модели инженерных систем" />
-                                <ComboBox x:Name="SystemModelsComboBox" Margin="0,5,0,5"         
+                                <ComboBox x:Name="SystemModelComboBox" Margin="0,5,0,5"         
                         ItemsSource="{Binding DocumentEntities}" 
                         DisplayMemberPath="Title"  SelectedItem="{Binding SelectedEngineersDocument}"/>
+                                <TextBlock Text="Модели АР/КР" />
+                                <ComboBox x:Name="ModelsComboBox" Margin="0,5,0,5"         
+ItemsSource="{Binding DocumentEntities}" 
+DisplayMemberPath="Title"  SelectedItem="{Binding SelectedModelDocument}"/>
 
                                 <TextBlock x:Name="BoxFamilySquareComboBox" Text="Используемое семейство прямоугольного бокса" Height="25"/>
                                 <ComboBox ItemsSource="{Binding FamilyEntities}" 
@@ -92,9 +96,11 @@
             </TabItem>
         </TabControl>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="450,5,0,5" Grid.Row="2" Width="220">
-            <Button Content="Применить" Width="100" Margin="0,0,0,0" Style="{DynamicResource ActionButtonStyle}" />
-            <Button Content="Отмена" Width="100" Margin="0,0,0,0" Style="{DynamicResource ActionButtonStyle}" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="460,5,0,5" Grid.Row="2" Width="220">
+            <Button Content="Применить" Width="100" Margin="0,0,0,0" Style="{DynamicResource ActionButtonStyle}"
+                    Command="{Binding InitOperationCommand}" />
+            <Button Content="Отмена" Width="100" Style="{DynamicResource ActionButtonStyle}" Margin="10,0,0,0"
+                    Command ="{Binding CancelCommand}"/>
         </StackPanel>
     </Grid>
 

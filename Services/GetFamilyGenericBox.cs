@@ -17,10 +17,7 @@ namespace MakeFamilyBoxes.Services
         {
             DocumentSet documentSet = makeFamilyBoxesCommand.Docs;
             Document foundDocument = documentSet.Cast<Document>().FirstOrDefault(doc => doc.Title == _documentEntity.Title);
-            var filteredElements = new FilteredElementCollector(foundDocument).OfClass(typeof(Family)).Cast<Family>().ToList();
-
-            var elements = filteredElements
-                .Where(family => family.Name.ToLower().Contains("adsk")).Where(family => family.FamilyCategory?.Id.IntegerValue == (int)BuiltInCategory.OST_GenericModel)
+            var elements = new FilteredElementCollector(foundDocument).OfClass(typeof(Family)).Cast<Family>().ToList().Where(family => family.Name.ToLower().Contains("adsk")).Where(family => family.FamilyCategory?.Id.IntegerValue == (int)BuiltInCategory.OST_GenericModel)
                 .ToList();
             List<FamilyEntity> BoxFamilies = [];
             foreach (var fam in elements)
