@@ -9,7 +9,7 @@ using MakeFamilyBoxes.Models;
 
 namespace MakeFamilyBoxes.Services
 {
-    public class GetRevitDocuments (MakeFamilyBoxesCommand makeFamilyBoxesCommand)
+    public class GetRevitDocuments(MakeFamilyBoxesCommand makeFamilyBoxesCommand)
     {
         public MakeFamilyBoxesCommand makeFamilyBoxesCommand = makeFamilyBoxesCommand;
         public List<DocumentEntity> documentEntities = [];
@@ -26,6 +26,15 @@ namespace MakeFamilyBoxes.Services
                 }
             }
             return documentEntities;
+        }
+        public Document GetDocumentFromEntity(DocumentEntity documentEntity)
+        {
+            DocSet = makeFamilyBoxesCommand.Docs;
+            foreach (Document doc in DocSet)
+            {
+                if (doc.Title == documentEntity.Title) return doc;
+            }
+            return null;
         }
     }
 }

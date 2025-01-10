@@ -16,6 +16,7 @@ namespace MakeFamilyBoxes.ViewModels
     {
         private readonly GetRevitDocuments _getRevitDocuments;
         private readonly GetFamilyGenericBox _getFamilyGenericBox;
+        private readonly FindIntersectsService _findIntersectsService;
         private bool _isAutoPlacementEnabled = false;
         private bool _isManualPlacementEnabled = false;
         private bool _isChoosingById = false;
@@ -206,11 +207,12 @@ namespace MakeFamilyBoxes.ViewModels
                 OnPropertyChanged(nameof(SelectedFamilyRoundBox));
             }
         }
-        public MakeFamilyBoxesViewModel(GetRevitDocuments getRevitDocuments, GetFamilyGenericBox getFamilyGenericBox)
+        public MakeFamilyBoxesViewModel(GetRevitDocuments getRevitDocuments, GetFamilyGenericBox getFamilyGenericBox, FindIntersectsService findIntersectsService)
         {
             InitOperationCommand = new RelayCommand(InitOperation, null);
             _getRevitDocuments = getRevitDocuments;
             _getFamilyGenericBox = getFamilyGenericBox;
+            _findIntersectsService = findIntersectsService;
             GetDocumentEntities();
         }
         private void GetFamilyEntities(DocumentEntity hubdoc)
@@ -230,7 +232,7 @@ namespace MakeFamilyBoxes.ViewModels
                 if (IsAutoPlacementEnabled)
                 {
                     MessageBox.Show("IsAutoPlacementEnabled");
-                    //  PerformAutoPlacement();
+                    _findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument);
                 }
 
                 if (IsManualPlacementEnabled)

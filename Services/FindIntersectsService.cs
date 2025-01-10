@@ -1,30 +1,35 @@
 ﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.UI;
-using System;
-using System.Collections.Generic;
+using MakeFamilyBoxes.Commands;
+using MakeFamilyBoxes.Models;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 
 namespace MakeFamilyBoxes.Services
 {
-    public class FindIntersects
+    public class FindIntersectsService(MakeFamilyBoxesCommand makeFamilyBoxesCommand)
     {
-        public Result Execute(ExternalCommandData commandData, ElementSet elements)
+        DocumentEntity linkDocument;
+        DocumentEntity ActiveDocument;
+        MakeFamilyBoxesCommand makeFamilyBoxesCommand = makeFamilyBoxesCommand;
+
+        public void FindIntersects(GetRevitDocuments getRevitDocuments, DocumentEntity linkdoc, DocumentEntity activedoc)
         {
+            if (linkdoc == null || activedoc == null) { MessageBox.Show("Не заданы документы"); return; }
+            linkDocument = activedoc;
+            ActiveDocument = linkdoc;
             // Получение активного документа
-            Document doc = commandData.Application.ActiveUIDocument.Document;
+            Document doc = getRevitDocuments.GetDocumentFromEntity(ActiveDocument);
 
             // Параметры для входных данных
-            List<Document> linkDocs = []; // Сюда можно вручную добавить ссылки на связанные документы
+            List<Document> linkDocs = ([getRevitDocuments.GetDocumentFromEntity(linkDocument)]); // Сюда можно вручную добавить ссылки на связанные документы
 
             // Сбор данных из основного документа
             List<Element> ducts = new FilteredElementCollector(doc)
                 .OfCategory(BuiltInCategory.OST_DuctCurves)
                 .WhereElementIsNotElementType()
                 .ToElements() as List<Element>;
-
             List<Element> pipes = new FilteredElementCollector(doc)
                 .OfCategory(BuiltInCategory.OST_PipeCurves)
                 .WhereElementIsNotElementType()
@@ -35,6 +40,8 @@ namespace MakeFamilyBoxes.Services
                 .WhereElementIsNotElementType()
                 .ToElements() as List<Element>;
 
+            if (ducts.Count == 0 && pipes.Count == 0 && cableTrays.Count == 0) { MessageBox.Show("Не найдено элементов инженерных систем"); return; };
+            
             // Вспомогательные методы
             bool DoesIntersect(Element el1, Element el2)
             {
@@ -66,13 +73,13 @@ namespace MakeFamilyBoxes.Services
             {
                 try
                 {
-                    double width = el.LookupParameter("Width").AsDouble() * 304.8;
-                    double height = el.LookupParameter("Height").AsDouble() * 304.8;
+                    double width = el.LookupParameter("Ширина").AsDouble() * 304.8;
+                    double height = el.LookupParameter("Высота").AsDouble() * 304.8;
                     return ((int)width, (int)height);
                 }
                 catch
                 {
-                    double diameter = el.LookupParameter("Diameter").AsDouble() * 304.8;
+                    double diameter = el.LookupParameter("Диаметр").AsDouble() * 304.8;
                     return ((int)diameter, (int)diameter);
                 }
             }
@@ -97,7 +104,7 @@ namespace MakeFamilyBoxes.Services
                             string ductType = GetTypeName(duct);
                             string wallType = GetTypeName(wall);
                             var (width, height) = GetDuctOrPipeSize(duct);
-                            string insulation = ((double)duct.LookupParameter("Insulation Thickness")?.AsDouble() * 304.8).ToString("F0");
+                            string insulation = ((double)duct.LookupParameter("Толщина изоляции")?.AsDouble() * 304.8).ToString("F0");
                             results.Add($"{ductType}\t{width}\t{height}\t{wallType}\t{insulation}");
                         }
                     }
@@ -109,10 +116,10 @@ namespace MakeFamilyBoxes.Services
                     {
                         if (DoesIntersect(pipe, wall))
                         {
-                            string pipeType = GetTypeName(pipe);
-                            string wallType = GetTypeName(wall);
+                            string pipeType = (pipe.get_Parameter(BuiltInParameter.ELEM_TYPE_PARAM)?.AsElementId() is ElementId typeId) ? pipe.Document.GetElement(typeId)?.Name : "Unknown Type";
+                            string wallType = (wall.get_Parameter(BuiltInParameter.ELEM_TYPE_PARAM)?.AsElementId() is ElementId typeIdd) ? wall.Document.GetElement(typeIdd)?.Name : "Unknown Type";
                             var (width, height) = GetDuctOrPipeSize(pipe);
-                            string insulation = ((double)pipe.LookupParameter("Insulation Thickness")?.AsDouble() * 304.8).ToString("F0");
+                            string insulation = ((double)pipe.LookupParameter("Толщина изоляции")?.AsDouble() * 304.8).ToString("F0");
                             results.Add($"{pipeType}\t{width}\t{height}\t{wallType}\t{insulation}");
                         }
                     }
@@ -137,8 +144,6 @@ namespace MakeFamilyBoxes.Services
             string filePath = @"C:\Users\t.zaruba\Desktop\HolesTask.txt";
             File.WriteAllLines(filePath, results);
             TaskDialog.Show("Результат", $"Данные успешно записаны в файл: {filePath}");
-
-            return Result.Succeeded;
         }
     }
 }
