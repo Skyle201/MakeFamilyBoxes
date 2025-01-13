@@ -42,7 +42,6 @@ namespace MakeFamilyBoxes.Services
 
             if (ducts.Count == 0 && pipes.Count == 0 && cableTrays.Count == 0) { MessageBox.Show("Не найдено элементов инженерных систем"); return; };
             
-            // Вспомогательные методы
             bool DoesIntersect(Element el1, Element el2)
             {
                 BoundingBoxXYZ bbox1 = el1.get_BoundingBox(null);
