@@ -13,7 +13,7 @@ namespace MakeFamilyBoxes.Commands
     [Transaction(TransactionMode.Manual)]
     public class MakeFamilyBoxesCommand : IExternalCommand
     {
-        public DocumentSet Docs;
+        public List<Document> Docs;
         public Result Execute(
         ExternalCommandData commandData,
         ref string message,
@@ -22,9 +22,14 @@ namespace MakeFamilyBoxes.Commands
             var uiApplication = commandData.Application;
             UIApplication uiApp = commandData.Application;
             Application app = uiApp.Application;
-            Docs = app.Documents;
+            Docs = new List<Document>();
+            foreach (Document doc in app.Documents)
+            {
+                if (doc == null) continue;
+                Docs.Add(doc);
+            }
 
-            if (Docs.IsEmpty)
+            if (Docs.Count == 0)
             {
                 TaskDialog.Show("No Open Documents", "There are no documents currently open in Revit.");
                 return Result.Failed;
@@ -34,9 +39,7 @@ namespace MakeFamilyBoxes.Commands
             var findIntersectsService = new FindIntersectsService(this);
             var viewModel = new MakeFamilyBoxesViewModel(getRevitDocuments, getFamilyGenericBox, findIntersectsService);
             var view = new MakeFamilyBoxesView(viewModel);
-            var helper = new WindowInteropHelper(view);
-            view.Topmost = true;
-            view.Show();
+            view.ShowDialog();
             return Result.Succeeded;
         }
     }

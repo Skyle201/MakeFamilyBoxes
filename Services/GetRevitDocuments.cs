@@ -13,7 +13,7 @@ namespace MakeFamilyBoxes.Services
     {
         public MakeFamilyBoxesCommand makeFamilyBoxesCommand = makeFamilyBoxesCommand;
         public List<DocumentEntity> documentEntities = [];
-        public DocumentSet DocSet = new();
+        public List<Document> DocSet = [];
 
         public List<DocumentEntity> GetRevitDocs()
         {

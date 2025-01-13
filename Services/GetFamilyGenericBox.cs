@@ -15,7 +15,7 @@ namespace MakeFamilyBoxes.Services
 
         public List<FamilyEntity> GetFamilyEntities(DocumentEntity _documentEntity)
         {
-            DocumentSet documentSet = makeFamilyBoxesCommand.Docs;
+            List<Document> documentSet = makeFamilyBoxesCommand.Docs;
             Document foundDocument = documentSet.Cast<Document>().FirstOrDefault(doc => doc.Title == _documentEntity.Title);
             var elements = new FilteredElementCollector(foundDocument).OfClass(typeof(Family)).Cast<Family>().ToList().Where(family => family.Name.ToLower().Contains("adsk")).Where(family => family.FamilyCategory?.Id.IntegerValue == (int)BuiltInCategory.OST_GenericModel)
                 .ToList();
