@@ -22,7 +22,7 @@ namespace MakeFamilyBoxes.Commands
             var uiApplication = commandData.Application;
             UIApplication uiApp = commandData.Application;
             Application app = uiApp.Application;
-            Docs = new List<Document>();
+            Docs = [];
             foreach (Document doc in app.Documents)
             {
                 if (doc == null) continue;

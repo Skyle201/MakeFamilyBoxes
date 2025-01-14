@@ -6,15 +6,9 @@ using System.Threading.Tasks;
 
 namespace MakeFamilyBoxes.Models
 {
-    public class FamilyEntity
+    public class FamilyEntity(string name, int id)
     {
-        public string Name { get; }
-        public int Id { get; }
-
-        public FamilyEntity(string name, int id)
-        {
-            Name = name;
-            Id = id;
-        }
+        public string Name { get; } = name;
+        public int Id { get; } = id;
     }
 }

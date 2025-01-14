@@ -225,8 +225,7 @@ namespace MakeFamilyBoxes.ViewModels
         }
         private void InitOperation(object obj)
         {
-            List<bool> bools = new List<bool>()
-            { IsAutoPlacementEnabled, IsManualPlacementEnabled, IsChoosingById, IsCreateSpecification, IsCombineBoxes };
+            List<bool> bools = [IsAutoPlacementEnabled, IsManualPlacementEnabled, IsChoosingById, IsCreateSpecification, IsCombineBoxes];
             if (bools.Contains(true))
             {
                 if (IsAutoPlacementEnabled)
@@ -263,9 +262,6 @@ namespace MakeFamilyBoxes.ViewModels
             {
                 MessageBox.Show("Functions aren't choosed", "Exception");
             }
-        }
-        private void CancelOperation(object obj)
-        {
         }
         public ICommand InitOperationCommand { get; }
         public ICommand CancelCommand => new RelayCommand(obj =>
