@@ -28,7 +28,7 @@ namespace MakeFamilyBoxes.Services
 
             // Параметры для входных данных
             List<Document> StructureDocs = [getRevitDocuments.GetDocumentFromEntity(StructureDocumentEntity)]; 
-
+            List<IntersectionEntity> Intersections = [];
             Document EngineerDoc = EngineerDocs[0];
             // Сбор данных о сетях
             
@@ -46,6 +46,7 @@ namespace MakeFamilyBoxes.Services
                 .WhereElementIsNotElementType()
                 .ToElements() as List<Element>;
 
+
             if (ducts.Count == 0 && pipes.Count == 0 && cableTrays.Count == 0) { MessageBox.Show("Не найдено элементов инженерных систем"); return; };
     
             // Поиск пересечений
@@ -60,12 +61,31 @@ namespace MakeFamilyBoxes.Services
                         .WhereElementIsNotElementType()
                         .ToElements() as List<Element>;
 
+                    List<Element> floors = new FilteredElementCollector(doc)
+                        .OfCategory(BuiltInCategory.OST_Floors)
+                        
+                        .ToElements().ToList();
+
+
                     foreach (Element duct in ducts)
                     {
                         foreach (Element wall in walls)
                         {
-                          IntersectionEntity newshit = IntersectionEntity.TryCreateEntity(duct, wall, EngineerDock, doc);
-                            if (newshit != null) results.Add($"{newshit.EngineerPipeType}\t{newshit.Width}\t{newshit.Height}\t{newshit.StructureType}\t{newshit.Insulation}\t{newshit.CenterCoordinates}\t{newshit.FromProject}");
+                          IntersectionEntity intersction = IntersectionEntity.TryCreateEntity(duct, wall, EngineerDock, doc);
+                            if (intersction != null)
+                            {
+                                results.Add($"{intersction.EngineerPipeType}\t{intersction.Width}\t{intersction.Height}\t{intersction.StructureType}\t{intersction.Insulation}\t{intersction.CenterCoordinates}\t{intersction.FromProject}");
+                                Intersections.Add(intersction);
+                            }
+                        }
+                        foreach (Element floor in floors)
+                        {
+                            IntersectionEntity intersction = IntersectionEntity.TryCreateEntity(duct, floor, EngineerDock, doc);
+                            if (intersction != null)
+                            {
+                                results.Add($"{intersction.EngineerPipeType}\t{intersction.Width}\t{intersction.Height}\t{intersction.StructureType}\t{intersction.Insulation}\t{intersction.CenterCoordinates}\t{intersction.FromProject}");
+                                Intersections.Add(intersction);
+                            }
                         }
                     }
 
@@ -73,8 +93,21 @@ namespace MakeFamilyBoxes.Services
                     {
                         foreach (Element wall in walls)
                         {
-                            IntersectionEntity newshit = IntersectionEntity.TryCreateEntity(pipe, wall, EngineerDock, doc);
-                            results.Add($"{newshit.EngineerPipeType}\t{newshit.Width}\t{newshit.Height}\t{newshit.StructureType}\t{newshit.Insulation}\t{newshit.CenterCoordinates}\t{newshit.FromProject}");
+                            IntersectionEntity intersction = IntersectionEntity.TryCreateEntity(pipe, wall, EngineerDock, doc);
+                            if (intersction != null)
+                            {
+                                results.Add($"{intersction.EngineerPipeType}\t{intersction.Width}\t{intersction.Height}\t{intersction.StructureType}\t{intersction.Insulation}\t{intersction.CenterCoordinates}\t{intersction.FromProject}");
+                                Intersections.Add(intersction);
+                            }
+                        }
+                        foreach (Element floor in floors)
+                        {
+                            IntersectionEntity intersction = IntersectionEntity.TryCreateEntity(pipe, floor, EngineerDock, doc);
+                            if (intersction != null)
+                            {
+                                results.Add($"{intersction.EngineerPipeType}\t{intersction.Width}\t{intersction.Height}\t{intersction.StructureType}\t{intersction.Insulation}\t{intersction.CenterCoordinates}\t{intersction.FromProject}");
+                                Intersections.Add(intersction);
+                            }
                         }
                     }
 
@@ -82,8 +115,21 @@ namespace MakeFamilyBoxes.Services
                     {
                         foreach (Element wall in walls)
                         {
-                            IntersectionEntity newshit = IntersectionEntity.TryCreateEntity(cableTray, wall, EngineerDock, doc);
-                            results.Add($"{newshit.EngineerPipeType}\t{newshit.Width}\t{newshit.Height}\t{newshit.StructureType}\t{newshit.Insulation}\t{newshit.CenterCoordinates}\t{newshit.FromProject}");
+                            IntersectionEntity intersction = IntersectionEntity.TryCreateEntity(cableTray, wall, EngineerDock, doc);
+                            if (intersction != null)
+                            {
+                                results.Add($"{intersction.EngineerPipeType}\t{intersction.Width}\t{intersction.Height}\t{intersction.StructureType}\t{intersction.Insulation}\t{intersction.CenterCoordinates}\t{intersction.FromProject}");
+                                Intersections.Add(intersction);
+                            }
+                        }
+                        foreach (Element floor in floors)
+                        {
+                            IntersectionEntity intersction = IntersectionEntity.TryCreateEntity(cableTray, floor, EngineerDock, doc);
+                            if (intersction != null)
+                            {
+                                results.Add($"{intersction.EngineerPipeType}\t{intersction.Width}\t{intersction.Height}\t{intersction.StructureType}\t{intersction.Insulation}\t{intersction.CenterCoordinates}\t{intersction.FromProject}");
+                                Intersections.Add(intersction);
+                            }
                         }
                     }
                 }
