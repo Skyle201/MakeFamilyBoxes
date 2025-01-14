@@ -12,10 +12,10 @@ namespace MakeFamilyBoxes.Services
 {
     public class CreateBoxesService
     {
-        private List<BoxCreator> _boxCreators;
+        private readonly List<BoxCreator> _boxCreators;
         public CreateBoxesService()
         {
-            _boxCreators = new List<BoxCreator>();
+            _boxCreators = [];
         }
 
         public void CreateBoxes(GetRevitDocuments getRevitDocuments, DocumentEntity hubDocumentEntity, List<IntersectionEntity> intersections)
@@ -26,15 +26,13 @@ namespace MakeFamilyBoxes.Services
             }
 
             Document hubDocument = getRevitDocuments.GetDocumentFromEntity(hubDocumentEntity);
-            using (Transaction tx = new Transaction(hubDocument, "AutoPlacementBoxes"))
+            using Transaction tx = new(hubDocument, "AutoPlacementBoxes");
+            tx.Start();
+            foreach (var boxCreator in _boxCreators)
             {
-                tx.Start();
-                foreach (var boxCreator in _boxCreators)
-                {
-                    boxCreator.CreateBox(hubDocument);
-                }
-                tx.Commit();
+                boxCreator.CreateBox(hubDocument);
             }
+            tx.Commit();
         }
     }
 }

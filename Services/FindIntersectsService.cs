@@ -60,10 +60,10 @@ namespace MakeFamilyBoxes.Services
                         .WhereElementIsNotElementType()
                         .ToElements() as List<Element>;
 
-                    List<Element> floors = new FilteredElementCollector(doc)
+                    List<Element> floors = [.. new FilteredElementCollector(doc)
                         .OfCategory(BuiltInCategory.OST_Floors)
                         
-                        .ToElements().ToList();
+                        .ToElements()];
 
                     //Прогоняемся по элементам и ищем пересечения
 
