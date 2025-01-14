@@ -17,6 +17,7 @@ namespace MakeFamilyBoxes.ViewModels
         private readonly GetRevitDocuments _getRevitDocuments;
         private readonly GetFamilyGenericBox _getFamilyGenericBox;
         private readonly FindIntersectsService _findIntersectsService;
+        private readonly CreateBoxesService _createBoxesService;
         private bool _isAutoPlacementEnabled = false;
         private bool _isManualPlacementEnabled = false;
         private bool _isChoosingById = false;
@@ -207,12 +208,13 @@ namespace MakeFamilyBoxes.ViewModels
                 OnPropertyChanged(nameof(SelectedFamilyRoundBox));
             }
         }
-        public MakeFamilyBoxesViewModel(GetRevitDocuments getRevitDocuments, GetFamilyGenericBox getFamilyGenericBox, FindIntersectsService findIntersectsService)
+        public MakeFamilyBoxesViewModel(GetRevitDocuments getRevitDocuments, GetFamilyGenericBox getFamilyGenericBox, FindIntersectsService findIntersectsService, CreateBoxesService createBoxesService)
         {
             InitOperationCommand = new RelayCommand(InitOperation, null);
             _getRevitDocuments = getRevitDocuments;
             _getFamilyGenericBox = getFamilyGenericBox;
             _findIntersectsService = findIntersectsService;
+            _createBoxesService = createBoxesService;
             GetDocumentEntities();
         }
         private void GetFamilyEntities(DocumentEntity hubdoc)
@@ -231,7 +233,9 @@ namespace MakeFamilyBoxes.ViewModels
                 if (IsAutoPlacementEnabled)
                 {
                     MessageBox.Show("IsAutoPlacementEnabled");
-                    _findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument);
+                    List<IntersectionEntity> intersections = _findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument);
+                    _createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, intersections);
+
                 }
 
                 if (IsManualPlacementEnabled)

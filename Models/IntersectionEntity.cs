@@ -16,6 +16,7 @@ namespace MakeFamilyBoxes.Models
         public XYZ CenterCoordinates { get; set; }
         public double Height { get; set; }
         public double Width { get; set; }
+        public double Thickness { get; set; }
         public double Insulation { get; set; }
         public string FromProject { get; set; }
         public string ToProject { get; set; }
@@ -150,12 +151,22 @@ namespace MakeFamilyBoxes.Models
             Element typeElement = engdoc.GetElement(typeId) ?? strucdoc.GetElement(typeId);
             return typeElement?.Name ?? "Unknown";
         }
-        public static IntersectionEntity? TryCreateEntity(Element el1, Element el2, Document EngineerDocument, Document StructureDocument)
+        public static IntersectionEntity TryCreateEntity(Element el1, Element el2, Document EngineerDocument, Document StructureDocument)
         {
             if (DoesIntersect(el1, el2))
             {
                 string ductType = GetTypeName(el1, EngineerDocument, StructureDocument);
                 string wallType = GetTypeName(el2, EngineerDocument, StructureDocument);
+                double thickness = 0;
+                if (el2 is Wall wall)
+                {
+                    thickness = wall.Width * 304.8;
+                }
+                else if(el2 is Floor floor)
+                {
+                    thickness = floor.get_Parameter(BuiltInParameter.FLOOR_ATTR_THICKNESS_PARAM).AsDouble() * 304.8;
+                }
+
                 var (width, height) = GetDuctOrPipeSize(el1);
                 double insulation = 0;
                 if (el1.get_Parameter(BuiltInParameter.RBS_REFERENCE_INSULATION_THICKNESS) != null)
@@ -171,6 +182,7 @@ namespace MakeFamilyBoxes.Models
                     ToProject = StructureDocument.Title,
                     Height = height,
                     Width = width,
+                    Thickness = thickness,
                     Insulation = insulation,
                     Shape = shape,
                     EngineerPipeType = ductType,
