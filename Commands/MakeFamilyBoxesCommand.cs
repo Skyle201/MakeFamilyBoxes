@@ -36,8 +36,8 @@ namespace MakeFamilyBoxes.Commands
             }
             var getRevitDocuments = new GetRevitDocuments(this);
             var getFamilyGenericBox = new GetFamilyGenericBox(this);
-            var findIntersectsService = new FindIntersectsService(this);
-            var createBoxesService = new CreateBoxesService(this);
+            var findIntersectsService = new FindIntersectsService();
+            var createBoxesService = new CreateBoxesService();
             var viewModel = new MakeFamilyBoxesViewModel(getRevitDocuments, getFamilyGenericBox, findIntersectsService, createBoxesService);
             var view = new MakeFamilyBoxesView(viewModel);
             view.ShowDialog();

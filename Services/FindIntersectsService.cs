@@ -12,11 +12,10 @@ using System.Windows.Media.Media3D;
 using System.Xaml;
 namespace MakeFamilyBoxes.Services
 {
-    public class FindIntersectsService(MakeFamilyBoxesCommand makeFamilyBoxesCommand)
+    public class FindIntersectsService()
     {
         DocumentEntity StructureDocumentEntity;
         DocumentEntity LinkEngineerDocumentEntity;
-        private readonly MakeFamilyBoxesCommand makeFamilyBoxesCommand = makeFamilyBoxesCommand;
 
         public List<IntersectionEntity> FindIntersects(GetRevitDocuments getRevitDocuments, DocumentEntity linkdoc, DocumentEntity structDoc)
         {

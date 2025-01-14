@@ -12,12 +12,9 @@ namespace MakeFamilyBoxes.Services
 {
     public class CreateBoxesService
     {
-        private readonly MakeFamilyBoxesCommand _makeFamilyBoxesCommand;
         private List<BoxCreator> _boxCreators;
-
-        public CreateBoxesService(MakeFamilyBoxesCommand makeFamilyBoxesCommand)
+        public CreateBoxesService()
         {
-            _makeFamilyBoxesCommand = makeFamilyBoxesCommand;
             _boxCreators = new List<BoxCreator>();
         }
 
@@ -29,7 +26,7 @@ namespace MakeFamilyBoxes.Services
             }
 
             Document hubDocument = getRevitDocuments.GetDocumentFromEntity(hubDocumentEntity);
-            using (Transaction tx = new Transaction(hubDocument, "Insert Family"))
+            using (Transaction tx = new Transaction(hubDocument, "AutoPlacementBoxes"))
             {
                 tx.Start();
                 foreach (var boxCreator in _boxCreators)
