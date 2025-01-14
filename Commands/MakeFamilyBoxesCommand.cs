@@ -19,7 +19,6 @@ namespace MakeFamilyBoxes.Commands
         ref string message,
         ElementSet elements)
         {
-            var uiApplication = commandData.Application;
             UIApplication uiApp = commandData.Application;
             Application app = uiApp.Application;
             Docs = [];
@@ -35,10 +34,7 @@ namespace MakeFamilyBoxes.Commands
                 return Result.Failed;
             }
             var getRevitDocuments = new GetRevitDocuments(this);
-            var getFamilyGenericBox = new GetFamilyGenericBox(this);
-            var findIntersectsService = new FindIntersectsService();
-            var createBoxesService = new CreateBoxesService();
-            var viewModel = new MakeFamilyBoxesViewModel(getRevitDocuments, getFamilyGenericBox, findIntersectsService, createBoxesService);
+            var viewModel = new MakeFamilyBoxesViewModel(getRevitDocuments);
             var view = new MakeFamilyBoxesView(viewModel);
             view.ShowDialog();
             return Result.Succeeded;

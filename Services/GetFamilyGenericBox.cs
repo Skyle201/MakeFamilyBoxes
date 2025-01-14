@@ -9,14 +9,12 @@ using System.Threading.Tasks;
 
 namespace MakeFamilyBoxes.Services
 {
-    public class GetFamilyGenericBox (MakeFamilyBoxesCommand makeFamilyBoxesCommand)
+    public class GetFamilyGenericBox (GetRevitDocuments getRevitDocuments)
     {
-        public MakeFamilyBoxesCommand makeFamilyBoxesCommand = makeFamilyBoxesCommand;
-
+        private readonly GetRevitDocuments _getRevitDocuments = getRevitDocuments;
         public List<FamilyEntity> GetFamilyEntities(DocumentEntity _documentEntity)
         {
-            List<Document> documentSet = makeFamilyBoxesCommand.Docs;
-            Document foundDocument = documentSet.Cast<Document>().FirstOrDefault(doc => doc.Title == _documentEntity.Title);
+            Document foundDocument = _getRevitDocuments.GetDocumentFromEntity(_documentEntity);
             var elements = new FilteredElementCollector(foundDocument).OfClass(typeof(Family)).Cast<Family>().ToList().Where(family => family.Name.ToLower().Contains("adsk")).Where(family => family.FamilyCategory?.Id.IntegerValue == (int)BuiltInCategory.OST_GenericModel)
                 .ToList();
             List<FamilyEntity> BoxFamilies = [];

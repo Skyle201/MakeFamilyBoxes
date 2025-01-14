@@ -71,20 +71,22 @@ namespace MakeFamilyBoxes.Services
                     {
                         foreach (Element wall in walls)
                         {
-                          IntersectionEntity intersction = IntersectionEntity.TryCreateEntity(duct, wall, EngineerDock, doc);
-                            if (intersction != null)
+                            IntersectionEntity intersection = new();
+                            intersection = intersection.TryCreateEntity(duct, wall, EngineerDock, doc);
+                            if (intersection != null)
                             {
-                                results.Add($"{intersction.EngineerPipeType}\t{intersction.Width}\t{intersction.Height}\t{intersction.StructureType}\t{intersction.Insulation}\t{intersction.CenterCoordinates}\t{intersction.FromProject}\t{intersction.Thickness}");
-                                Intersections.Add(intersction);
+                                results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
+                                Intersections.Add(intersection);
                             }
                         }
                         foreach (Element floor in floors)
                         {
-                            IntersectionEntity intersction = IntersectionEntity.TryCreateEntity(duct, floor, EngineerDock, doc);
-                            if (intersction != null)
+                            IntersectionEntity intersection = new();
+                            intersection = intersection.TryCreateEntity(duct, floor, EngineerDock, doc);
+                            if (intersection != null)
                             {
-                                results.Add($"{intersction.EngineerPipeType}\t{intersction.Width}\t{intersction.Height}\t{intersction.StructureType}\t{intersction.Insulation}\t{intersction.CenterCoordinates}\t{intersction.FromProject}\t{intersction.Thickness}");
-                                Intersections.Add(intersction);
+                                results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
+                                Intersections.Add(intersection);
                             }
                         }
                     }
@@ -93,20 +95,22 @@ namespace MakeFamilyBoxes.Services
                     {
                         foreach (Element wall in walls)
                         {
-                            IntersectionEntity intersction = IntersectionEntity.TryCreateEntity(pipe, wall, EngineerDock, doc);
-                            if (intersction != null)
+                            IntersectionEntity intersection = new();
+                            intersection = intersection.TryCreateEntity(pipe, wall, EngineerDock, doc);
+                            if (intersection != null)
                             {
-                                results.Add($"{intersction.EngineerPipeType}\t{intersction.Width}\t{intersction.Height}\t{intersction.StructureType}\t{intersction.Insulation}\t{intersction.CenterCoordinates}\t{intersction.FromProject}\t{intersction.Thickness}");
-                                Intersections.Add(intersction);
+                                results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
+                                Intersections.Add(intersection);
                             }
                         }
                         foreach (Element floor in floors)
                         {
-                            IntersectionEntity intersction = IntersectionEntity.TryCreateEntity(pipe, floor, EngineerDock, doc);
-                            if (intersction != null)
+                            IntersectionEntity intersection = new();
+                            intersection = intersection.TryCreateEntity(pipe, floor, EngineerDock, doc);
+                            if (intersection != null)
                             {
-                                results.Add($"{intersction.EngineerPipeType}\t{intersction.Width}\t{intersction.Height}\t{intersction.StructureType}\t{intersction.Insulation}\t{intersction.CenterCoordinates}\t{intersction.FromProject}\t{intersction.Thickness}");
-                                Intersections.Add(intersction);
+                                results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
+                                Intersections.Add(intersection);
                             }
                         }
                     }
@@ -115,20 +119,22 @@ namespace MakeFamilyBoxes.Services
                     {
                         foreach (Element wall in walls)
                         {
-                            IntersectionEntity intersction = IntersectionEntity.TryCreateEntity(cableTray, wall, EngineerDock, doc);
-                            if (intersction != null)
+                            IntersectionEntity intersection = new();
+                            intersection = intersection.TryCreateEntity(cableTray, wall, EngineerDock, doc);
+                            if (intersection != null)
                             {
-                                results.Add($"{intersction.EngineerPipeType}\t{intersction.Width}\t{intersction.Height}\t{intersction.StructureType}\t{intersction.Insulation}\t{intersction.CenterCoordinates}\t{intersction.FromProject}\t{intersction.Thickness}");
-                                Intersections.Add(intersction);
+                                results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
+                                Intersections.Add(intersection);
                             }
                         }
                         foreach (Element floor in floors)
                         {
-                            IntersectionEntity intersction = IntersectionEntity.TryCreateEntity(cableTray, floor, EngineerDock, doc);
-                            if (intersction != null)
+                            IntersectionEntity intersection = new();
+                            intersection = intersection.TryCreateEntity(cableTray, floor, EngineerDock, doc);
+                            if (intersection != null)
                             {
-                                results.Add($"{intersction.EngineerPipeType}\t{intersction.Width}\t{intersction.Height}\t{intersction.StructureType}\t{intersction.Insulation}\t{intersction.CenterCoordinates}\t{intersction.FromProject}\t{intersction.Thickness}");
-                                Intersections.Add(intersction);
+                                results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
+                                Intersections.Add(intersection);
                             }
                         }
                     }

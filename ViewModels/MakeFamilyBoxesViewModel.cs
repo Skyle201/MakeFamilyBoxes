@@ -15,9 +15,6 @@ namespace MakeFamilyBoxes.ViewModels
     public class MakeFamilyBoxesViewModel : ViewModelBase
     {
         private readonly GetRevitDocuments _getRevitDocuments;
-        private readonly GetFamilyGenericBox _getFamilyGenericBox;
-        private readonly FindIntersectsService _findIntersectsService;
-        private readonly CreateBoxesService _createBoxesService;
         private bool _isAutoPlacementEnabled = false;
         private bool _isManualPlacementEnabled = false;
         private bool _isChoosingById = false;
@@ -208,18 +205,15 @@ namespace MakeFamilyBoxes.ViewModels
                 OnPropertyChanged(nameof(SelectedFamilyRoundBox));
             }
         }
-        public MakeFamilyBoxesViewModel(GetRevitDocuments getRevitDocuments, GetFamilyGenericBox getFamilyGenericBox, FindIntersectsService findIntersectsService, CreateBoxesService createBoxesService)
+        public MakeFamilyBoxesViewModel(GetRevitDocuments getRevitDocuments)
         {
             InitOperationCommand = new RelayCommand(InitOperation, null);
             _getRevitDocuments = getRevitDocuments;
-            _getFamilyGenericBox = getFamilyGenericBox;
-            _findIntersectsService = findIntersectsService;
-            _createBoxesService = createBoxesService;
             GetDocumentEntities();
         }
         private void GetFamilyEntities(DocumentEntity hubdoc)
         {
-            FamilyEntities = _getFamilyGenericBox.GetFamilyEntities(hubdoc);
+            FamilyEntities = new GetFamilyGenericBox(_getRevitDocuments).GetFamilyEntities(hubdoc);
         }
         private void GetDocumentEntities()
         {
@@ -233,8 +227,10 @@ namespace MakeFamilyBoxes.ViewModels
                 if (IsAutoPlacementEnabled)
                 {
                     MessageBox.Show("IsAutoPlacementEnabled");
-                    List<IntersectionEntity> intersections = _findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument);
-                    _createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, intersections);
+                    FindIntersectsService findIntersectsService = new();
+                    List<IntersectionEntity> intersections = findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument);
+                    CreateBoxesService createBoxesService = new();
+                    createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, intersections);
 
                 }
 
