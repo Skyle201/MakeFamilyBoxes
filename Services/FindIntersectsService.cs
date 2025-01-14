@@ -5,7 +5,8 @@ using MakeFamilyBoxes.Commands;
 using MakeFamilyBoxes.Models;
 using System.IO;
 using System.Windows;
-
+using System.Linq;
+using Autodesk.Revit.DB.Plumbing;
 namespace MakeFamilyBoxes.Services
 {
     public class FindIntersectsService(MakeFamilyBoxesCommand makeFamilyBoxesCommand)
@@ -24,11 +25,11 @@ namespace MakeFamilyBoxes.Services
             List<Document> EngineerDocs = [getRevitDocuments.GetDocumentFromEntity(LinkEngineerDocumentEntity)];
 
             // Параметры для входных данных
-            List<Document> StructureDocs = [getRevitDocuments.GetDocumentFromEntity(StructureDocumentEntity)]; // Сюда можно вручную добавить ссылки на связанные документы
+            List<Document> StructureDocs = [getRevitDocuments.GetDocumentFromEntity(StructureDocumentEntity)]; 
 
             Document EngineerDoc = EngineerDocs[0];
             // Сбор данных о сетях
-
+            
             List<Element> ducts = new FilteredElementCollector(EngineerDoc)
                 .OfCategory(BuiltInCategory.OST_DuctCurves)
                 .WhereElementIsNotElementType()
@@ -129,20 +130,56 @@ namespace MakeFamilyBoxes.Services
                        (min1.Z <= max2.Z && max1.Z >= min2.Z);
             }
 
-            (int Width, int Height) GetDuctOrPipeSize(Element el)
+            (double Width, double Height) GetDuctOrPipeSize(Element el)
             {
-                try
+                if (el == null || el.Category == null)
+                    return (0, 0);
+
+                BuiltInCategory category = (BuiltInCategory)el.Category.Id.IntegerValue;
+
+                switch (category)
                 {
-                    double width = el.LookupParameter("Ширина").AsDouble() * 304.8;
-                    double height = el.LookupParameter("Высота").AsDouble() * 304.8;
-                    return ((int)width, (int)height);
+                    case BuiltInCategory.OST_DuctCurves:
+                        var duct = el as Duct;
+                        if (duct == null || duct.DuctType == null)
+                            return (0, 0);
+
+                        var ductShape = duct.DuctType.Shape;
+                        if (ductShape == ConnectorProfileType.Round)
+                        {
+                            double diameter = el.get_Parameter(BuiltInParameter.RBS_CURVE_DIAMETER_PARAM)?.AsDouble() ?? 0;
+                            return (diameter * 304.8, diameter * 304.8);
+                        }
+                        else if (ductShape == ConnectorProfileType.Rectangular || ductShape == ConnectorProfileType.Oval)
+                        {
+                            double width = el.get_Parameter(BuiltInParameter.RBS_CURVE_WIDTH_PARAM)?.AsDouble() ?? 0;
+                            double height = el.get_Parameter(BuiltInParameter.RBS_CURVE_HEIGHT_PARAM)?.AsDouble() ?? 0;
+                            return (width * 304.8, height * 304.8);
+                        }
+                        break;
+
+                    case BuiltInCategory.OST_PipeCurves:
+                        var pipe = el as Pipe;
+                        if (pipe == null || pipe.PipeType == null)
+                            return (0, 0);
+
+                        var pipeShape = pipe.PipeType.Shape;
+                        if (pipeShape == ConnectorProfileType.Round)
+                        {
+                            double diameter = el.get_Parameter(BuiltInParameter.RBS_PIPE_DIAMETER_PARAM)?.AsDouble() ?? 0;
+                            return (diameter * 304.8, diameter * 304.8);
+                        }
+                        break;
+
+                    case BuiltInCategory.OST_CableTray:
+                        double cableTrayWidth = el.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM)?.AsDouble() ?? 0;
+                        double cableTrayHeight = el.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM)?.AsDouble() ?? 0;
+                        return (cableTrayWidth * 304.8, cableTrayHeight * 304.8);
                 }
-                catch
-                {
-                    double diameter = el.LookupParameter("Диаметр").AsDouble() * 304.8;
-                    return ((int)diameter, (int)diameter);
-                }
+
+                return (0, 0);
             }
+
             string GetTypeName(Element el, Document engdoc, Document strucdoc)
             {
                 ElementId typeId = el.GetTypeId();
