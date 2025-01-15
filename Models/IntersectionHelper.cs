@@ -115,25 +115,56 @@ namespace MakeFamilyBoxes.Models
         }
         public XYZ GetIntersectionCenter(Element el1, Element el2)
         {
-            BoundingBoxXYZ bbox1 = el1.get_BoundingBox(null);
-            BoundingBoxXYZ bbox2 = el2.get_BoundingBox(null);
+            GeometryElement geomEl1 = el1.get_Geometry(new Options());
+            Solid solid1 = GetSolidFromGeometry(geomEl1);
 
-            if (bbox1 == null || bbox2 == null)
-                throw new InvalidOperationException("One or both elements do not have a bounding box.");
+            GeometryElement geomEl2 = el2.get_Geometry(new Options());
+            Solid solid2 = GetSolidFromGeometry(geomEl2);
 
-            double minX = Math.Max(bbox1.Min.X, bbox2.Min.X);
-            double minY = Math.Max(bbox1.Min.Y, bbox2.Min.Y);
-            double minZ = Math.Max(bbox1.Min.Z, bbox2.Min.Z);
+            if (solid1 == null || solid2 == null)
+                throw new InvalidOperationException("One or both elements do not have valid geometry.");
 
-            double maxX = Math.Min(bbox1.Max.X, bbox2.Max.X);
-            double maxY = Math.Min(bbox1.Max.Y, bbox2.Max.Y);
-            double maxZ = Math.Min(bbox1.Max.Z, bbox2.Max.Z);
+            Solid intersectionSolid = BooleanOperationsUtils.ExecuteBooleanOperation(solid1, solid2, BooleanOperationsType.Intersect);
 
-            double centerX = (minX + maxX) / 2;
-            double centerY = (minY + maxY) / 2;
-            double centerZ = (minZ + maxZ) / 2;
+            if (intersectionSolid == null || intersectionSolid.Volume == 0)
+                throw new InvalidOperationException("The elements do not intersect or the intersection has no volume.");
 
-            return new XYZ(centerX, centerY, centerZ);
+            XYZ center = intersectionSolid.ComputeCentroid();
+
+            return center;
+        }
+
+        private Solid GetSolidFromGeometry(GeometryElement geometryElement)
+        {
+            foreach (GeometryObject geomObj in geometryElement)
+            {
+                if (geomObj is Solid solid && solid.Volume > 0)
+                {
+                    return solid;
+                }
+                else if (geomObj is GeometryInstance instance)
+                {
+                    // Для вложенной геометрии
+                    GeometryElement instanceGeometry = instance.GetInstanceGeometry();
+                    Solid nestedSolid = GetSolidFromGeometry(instanceGeometry);
+                    if (nestedSolid != null)
+                        return nestedSolid;
+                }
+            }
+
+            return null; // Если Solid не найден
+        }
+        public double GetWallRotationAngle(Wall wall)
+        {
+            LocationCurve locationCurve = wall.Location as LocationCurve ?? throw new InvalidOperationException("Невозможно получить LocationCurve у стены.");
+            XYZ startPoint = locationCurve.Curve.GetEndPoint(0);
+            XYZ endPoint = locationCurve.Curve.GetEndPoint(1);
+
+            XYZ direction = (endPoint - startPoint).Normalize();
+
+            double angle = Math.Atan2(direction.Y, direction.X);
+
+            return angle * (180 / Math.PI);
         }
 
     }

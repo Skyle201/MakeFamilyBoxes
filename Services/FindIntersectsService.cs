@@ -49,7 +49,7 @@ namespace MakeFamilyBoxes.Services
             if (ducts.Count == 0 && pipes.Count == 0 && cableTrays.Count == 0) { MessageBox.Show("Не найдено элементов инженерных систем"); return null; };
     
             // Поиск пересечений
-            List<string> results = ["DuctType\tWidth\tHeight\tWallType\tInsulation"];
+            //List<string> results = ["DuctType\tWidth\tHeight\tWallType\tInsulation"];
 
             foreach (Document EngineerDock in EngineerDocs)
             {
@@ -75,7 +75,7 @@ namespace MakeFamilyBoxes.Services
                             intersection = intersection.TryCreateEntity(duct, wall, EngineerDock, doc);
                             if (intersection != null)
                             {
-                                results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
+                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
                                 Intersections.Add(intersection);
                             }
                         }
@@ -85,7 +85,7 @@ namespace MakeFamilyBoxes.Services
                             intersection = intersection.TryCreateEntity(duct, floor, EngineerDock, doc);
                             if (intersection != null)
                             {
-                                results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
+                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
                                 Intersections.Add(intersection);
                             }
                         }
@@ -99,7 +99,7 @@ namespace MakeFamilyBoxes.Services
                             intersection = intersection.TryCreateEntity(pipe, wall, EngineerDock, doc);
                             if (intersection != null)
                             {
-                                results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
+                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
                                 Intersections.Add(intersection);
                             }
                         }
@@ -109,7 +109,7 @@ namespace MakeFamilyBoxes.Services
                             intersection = intersection.TryCreateEntity(pipe, floor, EngineerDock, doc);
                             if (intersection != null)
                             {
-                                results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
+                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
                                 Intersections.Add(intersection);
                             }
                         }
@@ -123,7 +123,7 @@ namespace MakeFamilyBoxes.Services
                             intersection = intersection.TryCreateEntity(cableTray, wall, EngineerDock, doc);
                             if (intersection != null)
                             {
-                                results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
+                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
                                 Intersections.Add(intersection);
                             }
                         }
@@ -133,7 +133,7 @@ namespace MakeFamilyBoxes.Services
                             intersection = intersection.TryCreateEntity(cableTray, floor, EngineerDock, doc);
                             if (intersection != null)
                             {
-                                results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
+                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
                                 Intersections.Add(intersection);
                             }
                         }
@@ -142,9 +142,9 @@ namespace MakeFamilyBoxes.Services
             }
 
             // Сохранение данных в текстовый файл
-            string filePath = @"C:\Users\t.zaruba\Desktop\HolesTask.txt";
-            File.WriteAllLines(filePath, results);
-            MessageBox.Show("Результат", $"Данные успешно записаны в файл: {filePath}");
+            //string filePath = @"C:\Users\t.zaruba\Desktop\HolesTask.txt";
+            //File.WriteAllLines(filePath, results);
+            //MessageBox.Show("Результат", $"Данные успешно записаны в файл: {filePath}");
             return Intersections;
         }
     }

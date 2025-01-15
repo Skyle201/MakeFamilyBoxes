@@ -230,7 +230,7 @@ namespace MakeFamilyBoxes.ViewModels
                     FindIntersectsService findIntersectsService = new();
                     List<IntersectionEntity> intersections = findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument);
                     CreateBoxesService createBoxesService = new();
-                    createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, intersections);
+                    createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, intersections,SelectedFamilySquareBox,SelectedFamilyRoundBox);
 
                 }
 
