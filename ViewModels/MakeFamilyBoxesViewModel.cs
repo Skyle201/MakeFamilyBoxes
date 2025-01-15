@@ -226,33 +226,40 @@ namespace MakeFamilyBoxes.ViewModels
             {
                 if (IsAutoPlacementEnabled)
                 {
-                    MessageBox.Show("IsAutoPlacementEnabled");
-                    FindIntersectsService findIntersectsService = new();
-                    List<IntersectionEntity> intersections = findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument);
-                    CreateBoxesService createBoxesService = new();
-                    createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, intersections,SelectedFamilySquareBox,SelectedFamilyRoundBox);
-
+                    if (SelectedFamilyRoundBox == null && SelectedFamilySquareBox == null)
+                    {
+                        MessageBox.Show("Не выбраны семейства боксов");
+                    }
+                    else
+                    {
+                        FindIntersectsService findIntersectsService = new();
+                        List<IntersectionEntity> intersections = findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument, MinSizeOfSquareBox, MinSizeOfRoundBox);
+                        CreateBoxesService createBoxesService = new();
+                        createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, intersections, SelectedFamilySquareBox, SelectedFamilyRoundBox, OffsetFromCuttingEdge);
+                        MessageBox.Show("Боксы успешно созданы");
+                    }
                 }
 
-                if (IsManualPlacementEnabled)
+
+                else if (IsManualPlacementEnabled)
                 {
                     MessageBox.Show("IsManualPlacementEnabled");
                     // PerformManualPlacement();
                 }
 
-                if (IsChoosingById)
+                else if (IsChoosingById)
                 {
                     MessageBox.Show("IsChoosingById");
                     // PerformChoosingById();
                 }
 
-                if (IsCreateSpecification)
+                else if (IsCreateSpecification)
                 {
                     MessageBox.Show("IsCreateSpecification");
                     // CreateSpecification();
                 }
 
-                if (IsCombineBoxes)
+                else if (IsCombineBoxes)
                 {
                     MessageBox.Show("IsCombineBoxes");
                     //CombineBoxes();

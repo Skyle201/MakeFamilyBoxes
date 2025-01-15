@@ -17,11 +17,24 @@ namespace MakeFamilyBoxes.Services
         DocumentEntity StructureDocumentEntity;
         DocumentEntity LinkEngineerDocumentEntity;
 
-        public List<IntersectionEntity> FindIntersects(GetRevitDocuments getRevitDocuments, DocumentEntity linkdoc, DocumentEntity structDoc)
+        public List<IntersectionEntity> FindIntersects(GetRevitDocuments getRevitDocuments, DocumentEntity linkdoc, DocumentEntity structDoc,string minSizeOfSquareBox,string minSizeOfRoundBox)
         {
             if (linkdoc == null || structDoc == null) { MessageBox.Show("Не заданы документы"); return null ; }
             StructureDocumentEntity = structDoc;
             LinkEngineerDocumentEntity = linkdoc;
+            double MinSizeOfSquareBox = 0;
+            double MinSizeOfRoundBox = 0;
+            try
+            {
+                MinSizeOfSquareBox = Convert.ToDouble(minSizeOfSquareBox);
+            }
+            catch (Exception) { }
+            try
+            {
+                MinSizeOfRoundBox = Convert.ToDouble(minSizeOfRoundBox);
+            }
+            catch (Exception) { }
+
             // Получение документа
             List<Document> EngineerDocs = [getRevitDocuments.GetDocumentFromEntity(LinkEngineerDocumentEntity)];
 
@@ -62,7 +75,6 @@ namespace MakeFamilyBoxes.Services
 
                     List<Element> floors = [.. new FilteredElementCollector(doc)
                         .OfCategory(BuiltInCategory.OST_Floors)
-                        
                         .ToElements()];
 
                     //Прогоняемся по элементам и ищем пересечения
@@ -76,7 +88,10 @@ namespace MakeFamilyBoxes.Services
                             if (intersection != null)
                             {
                                 //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
-                                Intersections.Add(intersection);
+                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
+                                    {
+                                    Intersections.Add(intersection);
+                                }
                             }
                         }
                         foreach (Element floor in floors)
@@ -86,7 +101,10 @@ namespace MakeFamilyBoxes.Services
                             if (intersection != null)
                             {
                                 //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
-                                Intersections.Add(intersection);
+                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
+                                    {
+                                    Intersections.Add(intersection);
+                                }
                             }
                         }
                     }
@@ -100,7 +118,10 @@ namespace MakeFamilyBoxes.Services
                             if (intersection != null)
                             {
                                 //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
-                                Intersections.Add(intersection);
+                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
+                                    {
+                                    Intersections.Add(intersection);
+                                }
                             }
                         }
                         foreach (Element floor in floors)
@@ -110,7 +131,10 @@ namespace MakeFamilyBoxes.Services
                             if (intersection != null)
                             {
                                 //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
-                                Intersections.Add(intersection);
+                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
+                                    {
+                                    Intersections.Add(intersection);
+                                }
                             }
                         }
                     }
@@ -124,7 +148,10 @@ namespace MakeFamilyBoxes.Services
                             if (intersection != null)
                             {
                                 //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
-                                Intersections.Add(intersection);
+                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
+                                {
+                                    Intersections.Add(intersection);
+                                }
                             }
                         }
                         foreach (Element floor in floors)
@@ -134,7 +161,10 @@ namespace MakeFamilyBoxes.Services
                             if (intersection != null)
                             {
                                 //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
-                                Intersections.Add(intersection);
+                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
+                                {
+                                    Intersections.Add(intersection);
+                                }
                             }
                         }
                     }

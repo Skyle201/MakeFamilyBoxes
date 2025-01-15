@@ -52,7 +52,7 @@ namespace MakeFamilyBoxes.Models
                     var pipeShape = pipe.PipeType.Shape;
                     if (pipeShape == ConnectorProfileType.Round)
                     {
-                        double diameter = el.get_Parameter(BuiltInParameter.RBS_PIPE_DIAMETER_PARAM)?.AsDouble() ?? 0;
+                        double diameter = el.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER)?.AsDouble() ?? 0;
                         return (diameter * 304.8, diameter * 304.8);
                     }
                     break;
@@ -166,6 +166,5 @@ namespace MakeFamilyBoxes.Models
 
             return angle * (180 / Math.PI);
         }
-
     }
 }

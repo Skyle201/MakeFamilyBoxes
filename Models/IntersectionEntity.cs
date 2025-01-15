@@ -30,7 +30,18 @@ namespace MakeFamilyBoxes.Models
             Round,
             Rectangular
         };
-        
+        public bool IntersectionCheckDims(IntersectionEntity intersection, double minSizeSquareBox, double minSizeRoundBox)
+        {
+            if ((intersection.Shape == IntersectionEntity.ShapeEnum.Round) && (intersection.Width < minSizeRoundBox || intersection.Height < minSizeRoundBox))
+            {
+                return false;
+            }
+            else if ((intersection.Shape == IntersectionEntity.ShapeEnum.Rectangular) && (intersection.Width < minSizeSquareBox || intersection.Height < minSizeSquareBox))
+            {
+                return false;
+            }
+            else return true;
+        }
         public IntersectionEntity TryCreateEntity(Element el1, Element el2, Document EngineerDocument, Document StructureDocument)
         {
             try
