@@ -51,20 +51,6 @@ namespace MakeFamilyBoxes.Services
                 tx.Commit();
             }
             return new object();
-            //private object AutoPlaceBox()
-            //{
-
-            //    using (var t = new Transaction(_getRevitDocuments.GetDocumentFromEntity(SelectedHubDocument)))
-            //    {
-            //        FindIntersectsService findIntersectsService = new();
-            //        CreateBoxesService createBoxesService = new();
-            //        t.Start(nameof(AutoPlaceBox));
-            //        createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument, MinSizeOfSquareBox, MinSizeOfRoundBox), SelectedFamilySquareBox, SelectedFamilyRoundBox, OffsetFromCuttingEdge);
-            //        MessageBox.Show("Боксы успешно созданы");
-            //        t.Commit();
-            //    }
-            //    return new object();
-            //}
         }
     }
 }

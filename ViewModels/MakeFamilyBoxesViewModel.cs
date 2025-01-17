@@ -247,9 +247,14 @@ namespace MakeFamilyBoxes.ViewModels
                 {
                     try
                     {
-                        MessageBox.Show("IsManualPlacementEnabled");
-                    ManualBoxPlacementService manualBoxPlacementService = new(_getRevitDocuments);
-                    manualBoxPlacementService.ActivateManualBoxPlacement(SelectedFamilySquareBox);
+                        //MessageBox.Show("IsManualPlacementEnabled");
+                    ManualBoxPlacementService manualBoxPlacementService = new();
+                        FindIntersectsService findIntersectsService = new();
+                        CreateBoxesService createBoxesService = new();
+                        List<IntersectionEntity> intersections = manualBoxPlacementService.ActivateManualBoxPlacement(_getRevitDocuments, MinSizeOfSquareBox, MinSizeOfRoundBox);
+                        var instance = _revitTask.Run((uiApp) => createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, intersections, SelectedFamilySquareBox, SelectedFamilyRoundBox, OffsetFromCuttingEdge));
+                        MessageBox.Show("Боксы успешно созданы");
+
                     }
                     catch (Exception ex) { MessageBox.Show(ex.Message); }
 
@@ -257,8 +262,9 @@ namespace MakeFamilyBoxes.ViewModels
 
                 else if (IsChoosingById)
                 {
-                    MessageBox.Show("IsChoosingById");
-                    // PerformChoosingById();
+                    //MessageBox.Show("IsChoosingById");
+                    SelectByIdService selectByIdService = new();
+                    selectByIdService.SelectElementInCurrentDocument(_getRevitDocuments, BoxId);
                 }
 
                 else if (IsCreateSpecification)

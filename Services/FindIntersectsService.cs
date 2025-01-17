@@ -1,18 +1,22 @@
 ﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Mechanical;
+using Autodesk.Revit.UI;
+using MakeFamilyBoxes.Commands;
 using MakeFamilyBoxes.Models;
+using System.IO;
 using System.Windows;
+using System.Linq;
+using Autodesk.Revit.DB.Plumbing;
+using Autodesk.Revit.DB.Electrical;
+using System.Windows.Media.Media3D;
+using System.Xaml;
 namespace MakeFamilyBoxes.Services
 {
     public class FindIntersectsService()
     {
-        DocumentEntity StructureDocumentEntity;
-        DocumentEntity LinkEngineerDocumentEntity;
-
         public List<IntersectionEntity> FindIntersects(GetRevitDocuments getRevitDocuments, DocumentEntity linkdoc, DocumentEntity structDoc,string minSizeOfSquareBox,string minSizeOfRoundBox)
         {
             if (linkdoc == null || structDoc == null) { MessageBox.Show("Не заданы документы"); return null ; }
-            StructureDocumentEntity = structDoc;
-            LinkEngineerDocumentEntity = linkdoc;
             double MinSizeOfSquareBox = 0;
             double MinSizeOfRoundBox = 0;
             try
@@ -27,10 +31,10 @@ namespace MakeFamilyBoxes.Services
             catch (Exception) { }
 
             // Получение документа
-            List<Document> EngineerDocs = [getRevitDocuments.GetDocumentFromEntity(LinkEngineerDocumentEntity)];
+            List<Document> EngineerDocs = [getRevitDocuments.GetDocumentFromEntity(linkdoc)];
 
             // Параметры для входных данных
-            List<Document> StructureDocs = [getRevitDocuments.GetDocumentFromEntity(StructureDocumentEntity)]; 
+            List<Document> StructureDocs = [getRevitDocuments.GetDocumentFromEntity(structDoc)]; 
             List<Element> Ducts = [];
             List<Element> Pipes = [];
             List<Element> CableTrays = [];
@@ -57,6 +61,7 @@ namespace MakeFamilyBoxes.Services
             }
             // Сбор данных о сетях
             
+
             if (Ducts.Count == 0 && Pipes.Count == 0 && CableTrays.Count == 0) { MessageBox.Show("Не найдено элементов инженерных систем"); return null; };
 
             List<Element> Walls = [];
@@ -81,5 +86,7 @@ namespace MakeFamilyBoxes.Services
 
             return Intersections;
         }
+
+
         }
     }
