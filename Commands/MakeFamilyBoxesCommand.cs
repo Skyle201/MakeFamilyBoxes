@@ -2,10 +2,11 @@
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using MakeFamilyBoxes.Commands;
 using MakeFamilyBoxes.Services;
 using MakeFamilyBoxes.ViewModels;
 using MakeFamilyBoxes.Views;
-using System.Windows.Interop;
+
 
 namespace MakeFamilyBoxes.Commands
 {
@@ -15,12 +16,13 @@ namespace MakeFamilyBoxes.Commands
     {
         public List<Document> Docs;
         public UIDocument uiDoc;
+        public UIApplication uiApp;
         public Result Execute(
         ExternalCommandData commandData,
         ref string message,
         ElementSet elements)
         {
-            UIApplication uiApp = commandData.Application;
+            uiApp = commandData.Application;
             Application app = uiApp.Application;
             Docs = [];
             foreach (Document doc in app.Documents)
@@ -38,8 +40,12 @@ namespace MakeFamilyBoxes.Commands
             var getRevitDocuments = new GetRevitDocuments(this);
             var viewModel = new MakeFamilyBoxesViewModel(getRevitDocuments);
             var view = new MakeFamilyBoxesView(viewModel);
-            view.ShowDialog();
+            view.Show();
+
             return Result.Succeeded;
+        
+        //view.ShowDialog();
+        //return Result.Succeeded;
         }
     }
 }

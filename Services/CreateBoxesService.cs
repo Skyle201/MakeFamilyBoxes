@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using MakeFamilyBoxes.Models;
+using System.Drawing.Text;
 
 namespace MakeFamilyBoxes.Services
 {
@@ -7,7 +8,7 @@ namespace MakeFamilyBoxes.Services
     {
         private readonly List<BoxCreator> _boxCreators = [];
 
-        public void CreateBoxes
+        public object CreateBoxes
             (GetRevitDocuments getRevitDocuments,
             DocumentEntity hubDocumentEntity,
             List<IntersectionEntity> intersections,
@@ -15,6 +16,7 @@ namespace MakeFamilyBoxes.Services
             FamilyEntity RoundBoxEntity,
             string offset)
         {
+
             double Offset = 0;
             try
             {
@@ -38,6 +40,7 @@ namespace MakeFamilyBoxes.Services
             {
                 _boxCreators.Add(new BoxCreator(intersection, Offset));
             }
+            
             using Transaction tx = new(hubDocument, "AutoPlacementBoxes");
             {
                 tx.Start();
@@ -47,6 +50,21 @@ namespace MakeFamilyBoxes.Services
                 }
                 tx.Commit();
             }
+            return new object();
+            //private object AutoPlaceBox()
+            //{
+
+            //    using (var t = new Transaction(_getRevitDocuments.GetDocumentFromEntity(SelectedHubDocument)))
+            //    {
+            //        FindIntersectsService findIntersectsService = new();
+            //        CreateBoxesService createBoxesService = new();
+            //        t.Start(nameof(AutoPlaceBox));
+            //        createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument, MinSizeOfSquareBox, MinSizeOfRoundBox), SelectedFamilySquareBox, SelectedFamilyRoundBox, OffsetFromCuttingEdge);
+            //        MessageBox.Show("Боксы успешно созданы");
+            //        t.Commit();
+            //    }
+            //    return new object();
+            //}
         }
     }
 }

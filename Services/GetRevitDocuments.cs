@@ -11,6 +11,7 @@ namespace MakeFamilyBoxes.Services
         public List<DocumentEntity> documentEntities = [];
         public List<Document> DocSet = [];
         public UIDocument activeUIDoc = makeFamilyBoxesCommand.uiDoc;
+        public UIApplication uiApp = makeFamilyBoxesCommand.uiApp;
         public List<DocumentEntity> GetRevitDocs()
         {
             DocSet = makeFamilyBoxesCommand.Docs;

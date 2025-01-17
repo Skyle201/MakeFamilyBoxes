@@ -1,4 +1,7 @@
-﻿using MakeFamilyBoxes.Models;
+﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using MakeFamilyBoxes.Commands;
+using MakeFamilyBoxes.Models;
 using MakeFamilyBoxes.Services;
 using MakeFamilyBoxes.ViewModels.Command;
 using System.Windows;
@@ -26,6 +29,7 @@ namespace MakeFamilyBoxes.ViewModels
         private List<FamilyEntity> _familyEntities = [];
         private FamilyEntity _selectedFamilySquareBox;
         private FamilyEntity _selectedFamilyRoundBox;
+        private RevitTask _revitTask = new();
 
 
         public bool IsAutoPlacementEnabled
@@ -214,7 +218,7 @@ namespace MakeFamilyBoxes.ViewModels
         {
             _documentEntities = _getRevitDocuments.GetRevitDocs();
         }
-        private void InitOperation(object obj)
+        private async void InitOperation(object obj)
         {
             List<bool> bools = [IsAutoPlacementEnabled, IsManualPlacementEnabled, IsChoosingById, IsCreateSpecification, IsCombineBoxes];
             if (bools.Contains(true))
@@ -230,9 +234,8 @@ namespace MakeFamilyBoxes.ViewModels
                         else
                         {
                             FindIntersectsService findIntersectsService = new();
-                            List<IntersectionEntity> intersections = findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument, MinSizeOfSquareBox, MinSizeOfRoundBox);
                             CreateBoxesService createBoxesService = new();
-                            createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, intersections, SelectedFamilySquareBox, SelectedFamilyRoundBox, OffsetFromCuttingEdge);
+                            var instance = _revitTask.Run((uiApp) => createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument, MinSizeOfSquareBox, MinSizeOfRoundBox), SelectedFamilySquareBox, SelectedFamilyRoundBox, OffsetFromCuttingEdge));
                             MessageBox.Show("Боксы успешно созданы");
                         }
                     }
@@ -275,6 +278,20 @@ namespace MakeFamilyBoxes.ViewModels
                 MessageBox.Show("Functions aren't choosed", "Exception");
             }
         }
+        //private object AutoPlaceBox()
+        //{
+            
+        //    using (var t = new Transaction(_getRevitDocuments.GetDocumentFromEntity(SelectedHubDocument)))
+        //    {
+        //        FindIntersectsService findIntersectsService = new();
+        //        CreateBoxesService createBoxesService = new();
+        //        t.Start(nameof(AutoPlaceBox));
+        //        createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument, MinSizeOfSquareBox, MinSizeOfRoundBox), SelectedFamilySquareBox, SelectedFamilyRoundBox, OffsetFromCuttingEdge);
+        //        MessageBox.Show("Боксы успешно созданы");
+        //        t.Commit();
+        //    }
+        //    return new object();
+        //}
         public ICommand InitOperationCommand { get; }
         public ICommand CancelCommand => new RelayCommand(obj =>
         {
