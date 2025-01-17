@@ -1,11 +1,6 @@
-﻿using Autodesk.Revit.DB;
-using MakeFamilyBoxes.Commands;
-using MakeFamilyBoxes.Models;
+﻿using MakeFamilyBoxes.Models;
 using MakeFamilyBoxes.Services;
 using MakeFamilyBoxes.ViewModels.Command;
-using MakeFamilyBoxes.Views;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 
@@ -226,26 +221,34 @@ namespace MakeFamilyBoxes.ViewModels
             {
                 if (IsAutoPlacementEnabled)
                 {
-                    if (SelectedFamilyRoundBox == null && SelectedFamilySquareBox == null)
+                    try
                     {
-                        MessageBox.Show("Не выбраны семейства боксов");
+                        if (SelectedFamilyRoundBox == null && SelectedFamilySquareBox == null)
+                        {
+                            MessageBox.Show("Не выбраны семейства боксов");
+                        }
+                        else
+                        {
+                            FindIntersectsService findIntersectsService = new();
+                            List<IntersectionEntity> intersections = findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument, MinSizeOfSquareBox, MinSizeOfRoundBox);
+                            CreateBoxesService createBoxesService = new();
+                            createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, intersections, SelectedFamilySquareBox, SelectedFamilyRoundBox, OffsetFromCuttingEdge);
+                            MessageBox.Show("Боксы успешно созданы");
+                        }
                     }
-                    else
-                    {
-                        FindIntersectsService findIntersectsService = new();
-                        List<IntersectionEntity> intersections = findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument, MinSizeOfSquareBox, MinSizeOfRoundBox);
-                        CreateBoxesService createBoxesService = new();
-                        createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, intersections, SelectedFamilySquareBox, SelectedFamilyRoundBox, OffsetFromCuttingEdge);
-                        MessageBox.Show("Боксы успешно созданы");
-                    }
+                    catch (Exception ex) { MessageBox.Show(ex.Message); }
                 }
 
 
                 else if (IsManualPlacementEnabled)
                 {
-                    MessageBox.Show("IsManualPlacementEnabled");
+                    try
+                    {
+                        MessageBox.Show("IsManualPlacementEnabled");
                     ManualBoxPlacementService manualBoxPlacementService = new(_getRevitDocuments);
                     manualBoxPlacementService.ActivateManualBoxPlacement(SelectedFamilySquareBox);
+                    }
+                    catch (Exception ex) { MessageBox.Show(ex.Message); }
 
                 }
 
