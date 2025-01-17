@@ -40,142 +40,55 @@ namespace MakeFamilyBoxes.Services
 
             // Параметры для входных данных
             List<Document> StructureDocs = [getRevitDocuments.GetDocumentFromEntity(StructureDocumentEntity)]; 
-            List<IntersectionEntity> Intersections = [];
-            Document EngineerDoc = EngineerDocs[0];
-            // Сбор данных о сетях
-            
-            List<Element> ducts = new FilteredElementCollector(EngineerDoc)
+            List<Element> Ducts = [];
+            List<Element> Pipes = [];
+            List<Element> CableTrays = [];
+
+
+            foreach (Document doc in EngineerDocs)
+            {
+                List<Element> ducts = new FilteredElementCollector(doc)
                 .OfCategory(BuiltInCategory.OST_DuctCurves)
                 .WhereElementIsNotElementType()
                 .ToElements() as List<Element>;
-            List<Element> pipes = new FilteredElementCollector(EngineerDoc)
-                .OfCategory(BuiltInCategory.OST_PipeCurves)
-                .WhereElementIsNotElementType()
-                .ToElements() as List<Element>;
+                List<Element> pipes = new FilteredElementCollector(doc)
+                    .OfCategory(BuiltInCategory.OST_PipeCurves)
+                    .WhereElementIsNotElementType()
+                    .ToElements() as List<Element>;
 
-            List<Element> cableTrays = new FilteredElementCollector(EngineerDoc)
-                .OfCategory(BuiltInCategory.OST_CableTray)
-                .WhereElementIsNotElementType()
-                .ToElements() as List<Element>;
+                List<Element> cableTrays = new FilteredElementCollector(doc)
+                    .OfCategory(BuiltInCategory.OST_CableTray)
+                    .WhereElementIsNotElementType()
+                    .ToElements() as List<Element>;
+                Ducts.AddRange(ducts);
+                Pipes.AddRange(pipes);
+                CableTrays.AddRange(cableTrays);
+            }
+            // Сбор данных о сетях
+            
+            if (Ducts.Count == 0 && Pipes.Count == 0 && CableTrays.Count == 0) { MessageBox.Show("Не найдено элементов инженерных систем"); return null; };
 
+            List<Element> Walls = [];
+            List<Element> Floors = [];
 
-            if (ducts.Count == 0 && pipes.Count == 0 && cableTrays.Count == 0) { MessageBox.Show("Не найдено элементов инженерных систем"); return null; };
-    
-            // Поиск пересечений
-            //List<string> results = ["DuctType\tWidth\tHeight\tWallType\tInsulation"];
-
-            foreach (Document EngineerDock in EngineerDocs)
+            foreach (Document doc in StructureDocs)
             {
-                foreach (Document doc in StructureDocs)
-                {
-                    List<Element> walls = new FilteredElementCollector(doc)
-                        .OfCategory(BuiltInCategory.OST_Walls)
-                        .WhereElementIsNotElementType()
-                        .ToElements() as List<Element>;
+                List<Element> walls = new FilteredElementCollector(doc)
+                    .OfCategory(BuiltInCategory.OST_Walls)
+                    .WhereElementIsNotElementType()
+                    .ToElements() as List<Element>;
 
-                    List<Element> floors = [.. new FilteredElementCollector(doc)
+
+                List<Element> floors = [.. new FilteredElementCollector(doc)
                         .OfCategory(BuiltInCategory.OST_Floors)
                         .ToElements()];
-
-                    //Прогоняемся по элементам и ищем пересечения
-
-                    foreach (Element duct in ducts)
-                    {
-                        foreach (Element wall in walls)
-                        {
-                            IntersectionEntity intersection = new();
-                            intersection = intersection.TryCreateEntity(duct, wall, EngineerDock, doc);
-                            if (intersection != null)
-                            {
-                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
-                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
-                                    {
-                                    Intersections.Add(intersection);
-                                }
-                            }
-                        }
-                        foreach (Element floor in floors)
-                        {
-                            IntersectionEntity intersection = new();
-                            intersection = intersection.TryCreateEntity(duct, floor, EngineerDock, doc);
-                            if (intersection != null)
-                            {
-                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
-                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
-                                    {
-                                    Intersections.Add(intersection);
-                                }
-                            }
-                        }
-                    }
-
-                    foreach (Element pipe in pipes)
-                    {
-                        foreach (Element wall in walls)
-                        {
-                            IntersectionEntity intersection = new();
-                            intersection = intersection.TryCreateEntity(pipe, wall, EngineerDock, doc);
-                            if (intersection != null)
-                            {
-                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
-                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
-                                    {
-                                    Intersections.Add(intersection);
-                                }
-                            }
-                        }
-                        foreach (Element floor in floors)
-                        {
-                            IntersectionEntity intersection = new();
-                            intersection = intersection.TryCreateEntity(pipe, floor, EngineerDock, doc);
-                            if (intersection != null)
-                            {
-                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
-                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
-                                    {
-                                    Intersections.Add(intersection);
-                                }
-                            }
-                        }
-                    }
-
-                    foreach (Element cableTray in cableTrays)
-                    {
-                        foreach (Element wall in walls)
-                        {
-                            IntersectionEntity intersection = new();
-                            intersection = intersection.TryCreateEntity(cableTray, wall, EngineerDock, doc);
-                            if (intersection != null)
-                            {
-                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
-                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
-                                {
-                                    Intersections.Add(intersection);
-                                }
-                            }
-                        }
-                        foreach (Element floor in floors)
-                        {
-                            IntersectionEntity intersection = new();
-                            intersection = intersection.TryCreateEntity(cableTray, floor, EngineerDock, doc);
-                            if (intersection != null)
-                            {
-                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
-                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
-                                {
-                                    Intersections.Add(intersection);
-                                }
-                            }
-                        }
-                    }
-                }
+                Walls.AddRange(walls);
+                Floors.AddRange(floors);
             }
+            IntersectionHelper helper = new();
+            List<IntersectionEntity> Intersections = helper.FindIntersection(EngineerDocs, StructureDocs, Ducts, Pipes, CableTrays, Walls, Floors, MinSizeOfSquareBox, MinSizeOfRoundBox);
 
-            // Сохранение данных в текстовый файл
-            //string filePath = @"C:\Users\t.zaruba\Desktop\HolesTask.txt";
-            //File.WriteAllLines(filePath, results);
-            //MessageBox.Show("Результат", $"Данные успешно записаны в файл: {filePath}");
             return Intersections;
         }
+        }
     }
-}

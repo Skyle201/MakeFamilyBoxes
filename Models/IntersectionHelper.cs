@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Electrical;
 using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.DB.Plumbing;
 using System;
@@ -165,6 +166,118 @@ namespace MakeFamilyBoxes.Models
             double angle = Math.Atan2(direction.Y, direction.X);
 
             return angle * (180 / Math.PI);
+        }
+        public List<IntersectionEntity> FindIntersection(
+            List<Document> EngineerDocs,
+            List<Document> StructureDocs, 
+            List<Element> ducts, 
+            List<Element> pipes, 
+            List<Element> cableTrays, 
+            List<Element> walls, 
+            List<Element> floors,
+            double MinSizeOfSquareBox,
+            double MinSizeOfRoundBox
+            )
+        {
+            List<IntersectionEntity> Intersections = [];
+            foreach (Document EngineerDock in EngineerDocs)
+            {
+                foreach (Document doc in StructureDocs)
+                {
+
+                    foreach (Element duct in ducts)
+                    {
+                        foreach (Element wall in walls)
+                        {
+                            IntersectionEntity intersection = new();
+                            intersection = intersection.TryCreateEntity(duct, wall, EngineerDock, doc);
+                            if (intersection != null)
+                            {
+                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
+                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
+                                {
+                                    Intersections.Add(intersection);
+                                }
+                            }
+                        }
+                        foreach (Element floor in floors)
+                        {
+                            IntersectionEntity intersection = new();
+                            intersection = intersection.TryCreateEntity(duct, floor, EngineerDock, doc);
+                            if (intersection != null)
+                            {
+                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
+                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
+                                {
+                                    Intersections.Add(intersection);
+                                }
+                            }
+                        }
+                    }
+
+                    foreach (Element pipe in pipes)
+                    {
+                        foreach (Element wall in walls)
+                        {
+                            IntersectionEntity intersection = new();
+                            intersection = intersection.TryCreateEntity(pipe, wall, EngineerDock, doc);
+                            if (intersection != null)
+                            {
+                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
+                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
+                                {
+                                    Intersections.Add(intersection);
+                                }
+                            }
+                        }
+                        foreach (Element floor in floors)
+                        {
+                            IntersectionEntity intersection = new();
+                            intersection = intersection.TryCreateEntity(pipe, floor, EngineerDock, doc);
+                            if (intersection != null)
+                            {
+                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
+                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
+                                {
+                                    Intersections.Add(intersection);
+                                }
+                            }
+                        }
+                    }
+
+                    foreach (Element cableTray in cableTrays)
+                    {
+                        foreach (Element wall in walls)
+                        {
+                            IntersectionEntity intersection = new();
+                            intersection = intersection.TryCreateEntity(cableTray, wall, EngineerDock, doc);
+                            if (intersection != null)
+                            {
+                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
+                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
+                                {
+                                    Intersections.Add(intersection);
+                                }
+                            }
+                        }
+                        foreach (Element floor in floors)
+                        {
+                            IntersectionEntity intersection = new();
+                            intersection = intersection.TryCreateEntity(cableTray, floor, EngineerDock, doc);
+                            if (intersection != null)
+                            {
+                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
+                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
+                                {
+                                    Intersections.Add(intersection);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return Intersections;
+
         }
     }
 }

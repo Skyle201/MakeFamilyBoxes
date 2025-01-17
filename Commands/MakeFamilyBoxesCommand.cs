@@ -14,6 +14,7 @@ namespace MakeFamilyBoxes.Commands
     public class MakeFamilyBoxesCommand : IExternalCommand
     {
         public List<Document> Docs;
+        public UIDocument uiDoc;
         public Result Execute(
         ExternalCommandData commandData,
         ref string message,
@@ -33,6 +34,7 @@ namespace MakeFamilyBoxes.Commands
                 TaskDialog.Show("No Open Documents", "There are no documents currently open in Revit.");
                 return Result.Failed;
             }
+            uiDoc = uiApp.ActiveUIDocument;
             var getRevitDocuments = new GetRevitDocuments(this);
             var viewModel = new MakeFamilyBoxesViewModel(getRevitDocuments);
             var view = new MakeFamilyBoxesView(viewModel);

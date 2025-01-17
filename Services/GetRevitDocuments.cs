@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
 using MakeFamilyBoxes.Commands;
 using MakeFamilyBoxes.Models;
 
@@ -14,7 +15,7 @@ namespace MakeFamilyBoxes.Services
         public MakeFamilyBoxesCommand makeFamilyBoxesCommand = makeFamilyBoxesCommand;
         public List<DocumentEntity> documentEntities = [];
         public List<Document> DocSet = [];
-
+        public UIDocument activeUIDoc = makeFamilyBoxesCommand.uiDoc;
         public List<DocumentEntity> GetRevitDocs()
         {
             DocSet = makeFamilyBoxesCommand.Docs;

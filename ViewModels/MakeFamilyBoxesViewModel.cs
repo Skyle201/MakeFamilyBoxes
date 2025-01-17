@@ -244,7 +244,9 @@ namespace MakeFamilyBoxes.ViewModels
                 else if (IsManualPlacementEnabled)
                 {
                     MessageBox.Show("IsManualPlacementEnabled");
-                    // PerformManualPlacement();
+                    ManualBoxPlacementService manualBoxPlacementService = new(_getRevitDocuments);
+                    manualBoxPlacementService.ActivateManualBoxPlacement(SelectedFamilySquareBox);
+
                 }
 
                 else if (IsChoosingById)
