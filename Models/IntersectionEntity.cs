@@ -16,7 +16,7 @@ namespace MakeFamilyBoxes.Models
         public string EngineerPipeType {  get; set; } 
         public string StructureType { get; set; }
         public bool VerticalOrNot {  get; set; }
-        public double WallAngle { get; set; }
+        public double WallAngle { get; set; } = 0;
         public enum ShapeEnum
         {
             Round,

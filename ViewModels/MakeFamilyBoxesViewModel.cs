@@ -248,7 +248,6 @@ namespace MakeFamilyBoxes.ViewModels
                 {
                     try
                     {
-                        //MessageBox.Show("IsManualPlacementEnabled");
                     ManualBoxPlacementService manualBoxPlacementService = new();
                         FindIntersectsService findIntersectsService = new();
                         CreateBoxesService createBoxesService = new();
@@ -263,7 +262,6 @@ namespace MakeFamilyBoxes.ViewModels
 
                 else if (IsChoosingById)
                 {
-                    //MessageBox.Show("IsChoosingById");
                     SelectByIdService selectByIdService = new();
                     selectByIdService.SelectElementInCurrentDocument(_getRevitDocuments, BoxId);
                 }
@@ -276,13 +274,18 @@ namespace MakeFamilyBoxes.ViewModels
 
                 else if (IsCombineBoxes)
                 {
-                    MessageBox.Show("IsCombineBoxes");
-                    //CombineBoxes();
+                    try
+                    {
+                        CombineBoxService combineBoxService = new();
+                        var instance = await _revitTask.Run((uiApp) => combineBoxService.FindBoxToCombine(_getRevitDocuments,SelectedFamilySquareBox));
+                        MessageBox.Show("Выделенные боксы объединены");
+                    }
+                    catch (Exception ex) { MessageBox.Show($"Ошибка: {ex.Message}"); }
                 }
             }
             else
             {
-                MessageBox.Show("Functions aren't choosed", "Exception");
+                MessageBox.Show("Не выбраны функции", "Ошибка");
             }
         }
         public ICommand InitOperationCommand { get; }

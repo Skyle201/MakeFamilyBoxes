@@ -36,6 +36,7 @@ namespace MakeFamilyBoxes.Services
                 else RoundBoxEntity = SquareBoxEntity;
                 AllBoxesOn = false;
             }
+            if (RoundBoxEntity == null) RoundBoxEntity = SquareBoxEntity;
             FamilySymbol SquareBox = getFamilyGenericBox.GetFamilySymbolFromEntity(SquareBoxEntity, hubDocumentEntity);
             FamilySymbol RoundBox = getFamilyGenericBox.GetFamilySymbolFromEntity(RoundBoxEntity, hubDocumentEntity);
             foreach (var intersection in intersections)

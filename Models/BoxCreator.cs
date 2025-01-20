@@ -43,7 +43,7 @@ namespace MakeFamilyBoxes.Models
                             FromProject.Set(Intersection.FromProject);
                             ToProject.Set(Intersection.ToProject);
                         }
-                        catch (Exception ex) { }
+                        catch (Exception) { }
 
                     }
                     double angleInRadians = (Intersection.WallAngle+90) * (Math.PI / 180);
@@ -68,9 +68,13 @@ namespace MakeFamilyBoxes.Models
                         WidthDim.Set(Height);
                         ThicknessDim.Set(Width);
                         IsVertical.Set(1);
-                        Guid.Set(instance.Id.ToString());
-                        FromProject.Set(Intersection.FromProject);
-                        ToProject.Set(Intersection.ToProject); ;
+                        try
+                        {
+                            Guid.Set(instance.Id.ToString());
+                            FromProject.Set(Intersection.FromProject);
+                            ToProject.Set(Intersection.ToProject);
+                        }
+                        catch (Exception) { }
                     }
                 }
 
@@ -92,9 +96,13 @@ namespace MakeFamilyBoxes.Models
                         HeightDim.Set(Height);
                         WidthDim.Set(Width);
                         ThicknessDim.Set(Thickness);
-                        Guid.Set(instance.Id.ToString());
-                        FromProject.Set(Intersection.FromProject);
-                        ToProject.Set(Intersection.ToProject);
+                        try
+                        {
+                            Guid.Set(instance.Id.ToString());
+                            FromProject.Set(Intersection.FromProject);
+                            ToProject.Set(Intersection.ToProject);
+                        }
+                        catch (Exception) { }
                     }
                         double angleInRadians = Intersection.WallAngle * (Math.PI / 180);
                         XYZ startPoint = Intersection.CenterCoordinates;
@@ -107,18 +115,27 @@ namespace MakeFamilyBoxes.Models
                     Parameter HeightDim = instance.LookupParameter("Высота"); // Высота - по высоте
                     Parameter WidthDim = instance.LookupParameter("Ширина");  // Ширина в семействе - в бока
                     Parameter ThicknessDim = instance.LookupParameter("Толщина"); // Толщина в семействе - вглубь 
-                    Parameter Id = instance.LookupParameter("ID");
+                    Parameter Guid = instance.LookupParameter("ID");
                     Parameter FromProject = instance.LookupParameter("Из проекта");
                     Parameter ToProject = instance.LookupParameter("В проект");
+                    double angleInRadians = Intersection.WallAngle * (Math.PI / 180);
+                    XYZ startPoint = Intersection.CenterCoordinates;
+                    XYZ endPoint = Intersection.CenterCoordinates + XYZ.BasisZ;
+                    Line rotationAxis = Line.CreateBound(startPoint, endPoint);
+                    ElementTransformUtils.RotateElement(HubDocument, instance.Id, rotationAxis, angleInRadians);
 
                     if (HeightDim != null || WidthDim != null || ThicknessDim != null)
                     {
                         HeightDim.Set(Thickness);
                         WidthDim.Set(Height);
                         ThicknessDim.Set(Width);
-                        Id.Set(instance.Id.ToString());
-                        FromProject.Set(Intersection.FromProject);
-                        ToProject.Set(Intersection.ToProject);
+                        try
+                        {
+                            Guid.Set(instance.Id.ToString());
+                            FromProject.Set(Intersection.FromProject);
+                            ToProject.Set(Intersection.ToProject);
+                        }
+                        catch (Exception) { }
                     }
                 }
             }
