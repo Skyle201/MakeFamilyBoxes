@@ -29,13 +29,22 @@ namespace MakeFamilyBoxes.Models
                     Parameter ThicknessDim = instance.LookupParameter("Толщина"); // толщина в семействе - вглубь 
                     Parameter IsVertical = instance.LookupParameter("В перекрытии");
                     Parameter Guid = instance.LookupParameter("ID");
+                    Parameter FromProject = instance.LookupParameter("Из проекта");
+                    Parameter ToProject = instance.LookupParameter("В проект");
                     if (HeightDim != null || WidthDim != null || ThicknessDim != null)
                     {
                         HeightDim.Set(Thickness);
                         WidthDim.Set(Width);
                         ThicknessDim.Set(Height);
-                        IsVertical.Set(0);
-                        Guid.Set(instance.Id.ToString());
+                        try
+                        {
+                            IsVertical.Set(0);
+                            Guid.Set(instance.Id.ToString());
+                            FromProject.Set(Intersection.FromProject);
+                            ToProject.Set(Intersection.ToProject);
+                        }
+                        catch (Exception ex) { }
+
                     }
                     double angleInRadians = (Intersection.WallAngle+90) * (Math.PI / 180);
                     XYZ startPoint = Intersection.CenterCoordinates;
@@ -50,6 +59,8 @@ namespace MakeFamilyBoxes.Models
                     Parameter ThicknessDim = instance.LookupParameter("Толщина"); // Толщина в семействе - вглубь 
                     Parameter IsVertical = instance.LookupParameter("В перекрытии");
                     Parameter Guid = instance.LookupParameter("ID");
+                    Parameter FromProject = instance.LookupParameter("Из проекта");
+                    Parameter ToProject = instance.LookupParameter("В проект");
 
                     if (HeightDim != null || WidthDim != null || ThicknessDim != null)
                     {
@@ -58,6 +69,8 @@ namespace MakeFamilyBoxes.Models
                         ThicknessDim.Set(Width);
                         IsVertical.Set(1);
                         Guid.Set(instance.Id.ToString());
+                        FromProject.Set(Intersection.FromProject);
+                        ToProject.Set(Intersection.ToProject); ;
                     }
                 }
 
@@ -72,12 +85,16 @@ namespace MakeFamilyBoxes.Models
                     Parameter WidthDim = instance.LookupParameter("Ширина"); // Ширина в семействе - в бока
                     Parameter ThicknessDim = instance.LookupParameter("Толщина"); // толщина в семействе - вглубь 
                     Parameter Guid = instance.LookupParameter("ID");
+                    Parameter FromProject = instance.LookupParameter("Из проекта");
+                    Parameter ToProject = instance.LookupParameter("В проект");
                     if (HeightDim != null || WidthDim != null || ThicknessDim != null)
                     {
                         HeightDim.Set(Height);
                         WidthDim.Set(Width);
                         ThicknessDim.Set(Thickness);
                         Guid.Set(instance.Id.ToString());
+                        FromProject.Set(Intersection.FromProject);
+                        ToProject.Set(Intersection.ToProject);
                     }
                         double angleInRadians = Intersection.WallAngle * (Math.PI / 180);
                         XYZ startPoint = Intersection.CenterCoordinates;
@@ -91,6 +108,8 @@ namespace MakeFamilyBoxes.Models
                     Parameter WidthDim = instance.LookupParameter("Ширина");  // Ширина в семействе - в бока
                     Parameter ThicknessDim = instance.LookupParameter("Толщина"); // Толщина в семействе - вглубь 
                     Parameter Id = instance.LookupParameter("ID");
+                    Parameter FromProject = instance.LookupParameter("Из проекта");
+                    Parameter ToProject = instance.LookupParameter("В проект");
 
                     if (HeightDim != null || WidthDim != null || ThicknessDim != null)
                     {
@@ -98,12 +117,11 @@ namespace MakeFamilyBoxes.Models
                         WidthDim.Set(Height);
                         ThicknessDim.Set(Width);
                         Id.Set(instance.Id.ToString());
+                        FromProject.Set(Intersection.FromProject);
+                        ToProject.Set(Intersection.ToProject);
                     }
                 }
             }
-            //FamilySymbol familySymbol = collector
-            //    .Cast<FamilySymbol>()
-            //    .FirstOrDefault(symbol => symbol.Name.Equals("Кубик", StringComparison.OrdinalIgnoreCase));
         }
     }
 }

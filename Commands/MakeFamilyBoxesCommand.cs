@@ -41,6 +41,7 @@ namespace MakeFamilyBoxes.Commands
             var viewModel = new MakeFamilyBoxesViewModel(getRevitDocuments);
             var view = new MakeFamilyBoxesView(viewModel);
             view.Show();
+            view.Topmost = true;
 
             return Result.Succeeded;
         

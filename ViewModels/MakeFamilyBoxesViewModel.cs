@@ -213,6 +213,7 @@ namespace MakeFamilyBoxes.ViewModels
         private void GetFamilyEntities(DocumentEntity hubdoc)
         {
             FamilyEntities = new GetFamilyGenericBox(_getRevitDocuments).GetFamilyEntities(hubdoc);
+            FamilyEntities.Add(new FamilyEntity("", 0));
         }
         private void GetDocumentEntities()
         {
@@ -235,11 +236,11 @@ namespace MakeFamilyBoxes.ViewModels
                         {
                             FindIntersectsService findIntersectsService = new();
                             CreateBoxesService createBoxesService = new();
-                            var instance = _revitTask.Run((uiApp) => createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument, MinSizeOfSquareBox, MinSizeOfRoundBox), SelectedFamilySquareBox, SelectedFamilyRoundBox, OffsetFromCuttingEdge));
-                            MessageBox.Show("Боксы успешно созданы");
+                            var instance = await _revitTask.Run((uiApp) => createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument, MinSizeOfSquareBox, MinSizeOfRoundBox), SelectedFamilySquareBox, SelectedFamilyRoundBox, OffsetFromCuttingEdge));
+                            MessageBox.Show($"Боксы успешно созданы в количестве {createBoxesService.counter} штук");
                         }
                     }
-                    catch (Exception ex) { MessageBox.Show(ex.Message); }
+                    catch (Exception ex) { MessageBox.Show($"Ошибка: {ex.Message}"); }
                 }
 
 
@@ -252,11 +253,11 @@ namespace MakeFamilyBoxes.ViewModels
                         FindIntersectsService findIntersectsService = new();
                         CreateBoxesService createBoxesService = new();
                         List<IntersectionEntity> intersections = manualBoxPlacementService.ActivateManualBoxPlacement(_getRevitDocuments, MinSizeOfSquareBox, MinSizeOfRoundBox);
-                        var instance = _revitTask.Run((uiApp) => createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, intersections, SelectedFamilySquareBox, SelectedFamilyRoundBox, OffsetFromCuttingEdge));
-                        MessageBox.Show("Боксы успешно созданы");
+                        var instance =await _revitTask.Run((uiApp) => createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, intersections, SelectedFamilySquareBox, SelectedFamilyRoundBox, OffsetFromCuttingEdge));
+                        MessageBox.Show($"Боксы успешно созданы в количестве {createBoxesService.counter} штук");
 
                     }
-                    catch (Exception ex) { MessageBox.Show(ex.Message); }
+                    catch (Exception ex) {  MessageBox.Show($"Ошибка: {ex.Message}"); }
 
                 }
 
@@ -284,20 +285,6 @@ namespace MakeFamilyBoxes.ViewModels
                 MessageBox.Show("Functions aren't choosed", "Exception");
             }
         }
-        //private object AutoPlaceBox()
-        //{
-            
-        //    using (var t = new Transaction(_getRevitDocuments.GetDocumentFromEntity(SelectedHubDocument)))
-        //    {
-        //        FindIntersectsService findIntersectsService = new();
-        //        CreateBoxesService createBoxesService = new();
-        //        t.Start(nameof(AutoPlaceBox));
-        //        createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument, MinSizeOfSquareBox, MinSizeOfRoundBox), SelectedFamilySquareBox, SelectedFamilyRoundBox, OffsetFromCuttingEdge);
-        //        MessageBox.Show("Боксы успешно созданы");
-        //        t.Commit();
-        //    }
-        //    return new object();
-        //}
         public ICommand InitOperationCommand { get; }
         public ICommand CancelCommand => new RelayCommand(obj =>
         {

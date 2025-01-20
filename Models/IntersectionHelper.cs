@@ -162,116 +162,56 @@ namespace MakeFamilyBoxes.Models
             return angle * (180 / Math.PI);
         }
         public List<IntersectionEntity> FindIntersection(
-            List<Document> EngineerDocs,
-            List<Document> StructureDocs, 
-            List<Element> ducts, 
-            List<Element> pipes, 
-            List<Element> cableTrays, 
-            List<Element> walls, 
-            List<Element> floors,
-            double MinSizeOfSquareBox,
-            double MinSizeOfRoundBox
-            )
-        {
-            List<IntersectionEntity> Intersections = [];
-            foreach (Document EngineerDock in EngineerDocs)
+                List<Document> EngineerDocs,
+                List<Document> StructureDocs, 
+                List<Element> ducts, 
+                List<Element> pipes, 
+                List<Element> cableTrays, 
+                List<Element> walls, 
+                List<Element> floors,
+                double MinSizeOfSquareBox,
+                double MinSizeOfRoundBox)
             {
-                foreach (Document doc in StructureDocs)
+            HashSet<IntersectionEntity> Intersections = new(new IntersectionEntityComparer());
+
+                foreach (Document engineerDoc in EngineerDocs)
                 {
-
-                    foreach (Element duct in ducts)
+                    foreach (Document structureDoc in StructureDocs)
                     {
-                        foreach (Element wall in walls)
-                        {
-                            IntersectionEntity intersection = new();
-                            intersection = intersection.TryCreateEntity(duct, wall, EngineerDock, doc);
-                            if (intersection != null)
-                            {
-                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
-                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
-                                {
-                                    Intersections.Add(intersection);
-                                }
-                            }
-                        }
-                        foreach (Element floor in floors)
-                        {
-                            IntersectionEntity intersection = new();
-                            intersection = intersection.TryCreateEntity(duct, floor, EngineerDock, doc);
-                            if (intersection != null)
-                            {
-                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
-                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
-                                {
-                                    Intersections.Add(intersection);
-                                }
-                            }
-                        }
-                    }
-
-                    foreach (Element pipe in pipes)
-                    {
-                        foreach (Element wall in walls)
-                        {
-                            IntersectionEntity intersection = new();
-                            intersection = intersection.TryCreateEntity(pipe, wall, EngineerDock, doc);
-                            if (intersection != null)
-                            {
-                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
-                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
-                                {
-                                    Intersections.Add(intersection);
-                                }
-                            }
-                        }
-                        foreach (Element floor in floors)
-                        {
-                            IntersectionEntity intersection = new();
-                            intersection = intersection.TryCreateEntity(pipe, floor, EngineerDock, doc);
-                            if (intersection != null)
-                            {
-                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
-                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
-                                {
-                                    Intersections.Add(intersection);
-                                }
-                            }
-                        }
-                    }
-
-                    foreach (Element cableTray in cableTrays)
-                    {
-                        foreach (Element wall in walls)
-                        {
-                            IntersectionEntity intersection = new();
-                            intersection = intersection.TryCreateEntity(cableTray, wall, EngineerDock, doc);
-                            if (intersection != null)
-                            {
-                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
-                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
-                                {
-                                    Intersections.Add(intersection);
-                                }
-                            }
-                        }
-                        foreach (Element floor in floors)
-                        {
-                            IntersectionEntity intersection = new();
-                            intersection = intersection.TryCreateEntity(cableTray, floor, EngineerDock, doc);
-                            if (intersection != null)
-                            {
-                                //results.Add($"{intersection.EngineerPipeType}\t{intersection.Width}\t{intersection.Height}\t{intersection.StructureType}\t{intersection.Insulation}\t{intersection.CenterCoordinates}\t{intersection.FromProject}\t{intersection.Thickness}");
-                                if (intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
-                                {
-                                    Intersections.Add(intersection);
-                                }
-                            }
-                        }
+                    
+                        ProcessElements(ducts, walls, engineerDoc, structureDoc, MinSizeOfSquareBox, MinSizeOfRoundBox, Intersections);
+                        ProcessElements(ducts, floors, engineerDoc, structureDoc, MinSizeOfSquareBox, MinSizeOfRoundBox, Intersections);
+                        ProcessElements(pipes, walls, engineerDoc, structureDoc, MinSizeOfSquareBox, MinSizeOfRoundBox, Intersections);
+                        ProcessElements(pipes, floors, engineerDoc, structureDoc, MinSizeOfSquareBox, MinSizeOfRoundBox, Intersections);
+                        ProcessElements(cableTrays, walls, engineerDoc, structureDoc, MinSizeOfSquareBox, MinSizeOfRoundBox, Intersections);
+                        ProcessElements(cableTrays, floors, engineerDoc, structureDoc, MinSizeOfSquareBox, MinSizeOfRoundBox, Intersections);
                     }
                 }
+            return Intersections.ToList();
             }
-            return Intersections;
 
+
+        private void ProcessElements(
+    List<Element> engineerElements,
+    List<Element> structureElements,
+    Document engineerDoc,
+    Document structureDoc,
+    double MinSizeOfSquareBox,
+    double MinSizeOfRoundBox,
+    HashSet<IntersectionEntity> intersections)
+{
+    foreach (var engineerElement in engineerElements)
+    {
+        foreach (var structureElement in structureElements)
+        {
+                    IntersectionEntity intersection = new();
+                    intersection = intersection.TryCreateEntity(engineerElement, structureElement, engineerDoc, structureDoc);
+            if (intersection != null && intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
+            {
+                intersections.Add(intersection);
+            }
         }
+    }
+}
     }
 }

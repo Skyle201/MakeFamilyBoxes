@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using MakeFamilyBoxes.Services;
 
 namespace MakeFamilyBoxes.Models
 {
@@ -37,6 +38,7 @@ namespace MakeFamilyBoxes.Models
         {
             try
             {
+
                 IntersectionHelper helper = new();
                 if (helper.DoesIntersect(el1, el2))
                 {
@@ -68,8 +70,8 @@ namespace MakeFamilyBoxes.Models
                     return new IntersectionEntity
                     {
                         CenterCoordinates = center,
-                        FromProject = EngineerDocument.Title,
-                        ToProject = StructureDocument.Title,
+                        FromProject = el1.Document.Title,
+                        ToProject = el2.Document.Title,
                         Height = height,
                         Width = width,
                         Thickness = thickness,
@@ -85,5 +87,5 @@ namespace MakeFamilyBoxes.Models
             }
             catch (Exception) { return null; }
         }
-        }
+    }
     }

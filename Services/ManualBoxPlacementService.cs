@@ -12,8 +12,6 @@ namespace MakeFamilyBoxes.Services
 {
     public class ManualBoxPlacementService()
     {
-        DocumentEntity StructureDocumentEntity;
-        DocumentEntity LinkEngineerDocumentEntity;
         public Element GetElementFromLinkedDocument(Document hostDocument, Reference reference)
         {
             Element element = hostDocument.GetElement(reference);
@@ -32,18 +30,13 @@ namespace MakeFamilyBoxes.Services
         }
         public Document GetLinkedDocument(Document hostDocument, Reference reference)
         {
-            // Получаем элемент по ссылке
             Element element = hostDocument.GetElement(reference);
 
-            // Проверяем, является ли элемент связанным
             if (element is RevitLinkInstance linkInstance)
             {
-                // Если это экземпляр связанного документа, получаем его
                 Document linkedDocument = linkInstance.GetLinkDocument();
                 return linkedDocument;
             }
-
-            // Если элемент не является ссылкой на другой документ, возвращаем null
             return null;
         }
         public List<IntersectionEntity> ActivateManualBoxPlacement(GetRevitDocuments getRevitDocuments, string minSizeOfSquareBox, string minSizeOfRoundBox)
@@ -114,9 +107,6 @@ namespace MakeFamilyBoxes.Services
                 MinSizeOfRoundBox = Convert.ToDouble(minSizeOfRoundBox);
             }
             catch (Exception) { }
-
-
-            // Параметры для входных данных
             List<IntersectionEntity> Intersections = helper.FindIntersection(EngineerDocs, StructureDocs, ducts, pipes, cableTrays, walls, floors, MinSizeOfSquareBox, MinSizeOfRoundBox);
             return Intersections;
         }

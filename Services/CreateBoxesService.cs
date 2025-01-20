@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using MakeFamilyBoxes.Models;
+using System.Diagnostics;
 using System.Drawing.Text;
 
 namespace MakeFamilyBoxes.Services
@@ -7,6 +8,7 @@ namespace MakeFamilyBoxes.Services
     public class CreateBoxesService
     {
         private readonly List<BoxCreator> _boxCreators = [];
+        public int counter = 0; 
 
         public object CreateBoxes
             (GetRevitDocuments getRevitDocuments,
@@ -40,13 +42,16 @@ namespace MakeFamilyBoxes.Services
             {
                 _boxCreators.Add(new BoxCreator(intersection, Offset));
             }
-            
+            counter = 0;
             using Transaction tx = new(hubDocument, "AutoPlacementBoxes");
             {
                 tx.Start();
+                if (!SquareBox.IsActive) SquareBox.Activate();
+                if (!RoundBox.IsActive) RoundBox.Activate();
                 foreach (var boxCreator in _boxCreators)
                 {
                     boxCreator.CreateBox(hubDocument, SquareBox, RoundBox, AllBoxesOn);
+                    counter++;
                 }
                 tx.Commit();
             }
