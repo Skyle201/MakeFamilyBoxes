@@ -21,7 +21,6 @@ namespace MakeFamilyBoxes.Services
             CombineBoxHelper combineBoxHelper = new CombineBoxHelper();
             double AngleInDegrees = combineBoxHelper.GetRotationAngle(Elements[0]);
             IntersectionEntity intersect = combineBoxHelper.GetIntersection(Elements, AngleInDegrees);
-            intersect.WallAngle = AngleInDegrees;
             GetFamilyGenericBox getFamilyGenericBox = new(getRevitDocuments);
             FamilySymbol SquareBox = getFamilyGenericBox.GetFamilySymbolFromEntity(SquareBoxEntity, new DocumentEntity(doc.Title,0));
             FamilySymbol RoundBox = getFamilyGenericBox.GetFamilySymbolFromEntity(SquareBoxEntity, new DocumentEntity(doc.Title, 0));

@@ -49,6 +49,7 @@ namespace MakeFamilyBoxes.ViewModels
             get => _isManualPlacementEnabled;
             set
             {
+                SelectedHubDocument = _documentEntities.FirstOrDefault(x => x.Title == _getRevitDocuments.activeUIDoc.Document.Title);
                 if (_isManualPlacementEnabled != value)
                 {
                     _isManualPlacementEnabled = value;
@@ -85,6 +86,7 @@ namespace MakeFamilyBoxes.ViewModels
             get => _isCombineBoxes;
             set
             {
+                SelectedHubDocument = _documentEntities.FirstOrDefault(x => x.Title == _getRevitDocuments.activeUIDoc.Document.Title);
                 if (_isCombineBoxes != value)
                 {
                     _isCombineBoxes = value;
@@ -200,7 +202,8 @@ namespace MakeFamilyBoxes.ViewModels
             get => _selectedFamilyRoundBox;
             set
             {
-                _selectedFamilyRoundBox = value;
+                if (value.Name == string.Empty) _selectedFamilyRoundBox = null;
+                else _selectedFamilyRoundBox = value;
                 OnPropertyChanged(nameof(SelectedFamilyRoundBox));
             }
         }
@@ -213,7 +216,6 @@ namespace MakeFamilyBoxes.ViewModels
         private void GetFamilyEntities(DocumentEntity hubdoc)
         {
             FamilyEntities = new GetFamilyGenericBox(_getRevitDocuments).GetFamilyEntities(hubdoc);
-            FamilyEntities.Add(new FamilyEntity("", 0));
         }
         private void GetDocumentEntities()
         {

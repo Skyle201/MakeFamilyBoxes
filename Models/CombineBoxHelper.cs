@@ -59,12 +59,16 @@ namespace MakeFamilyBoxes.Models
             XYZ center = GetCenter(minPoint, maxPoint);
 
             var (width, height, thickness) = GetDimensions(minPoint, maxPoint);
-            if (Math.Abs(angle) > 1)
+            if (Convert.ToInt32(Math.Abs(angle)) > 0 && Convert.ToInt32(angle) % 90 != 0)
             {
                 var (rotatedWidth, rotatedHeight, rotatedThickness) = GetDimensionsWithAngle(minPoint, maxPoint);
                 width = rotatedWidth;
-                height = rotatedHeight;
+                height = 1;
                 thickness = rotatedThickness;
+            }
+            if (angle > 89.5 && angle < 90.5)
+            {
+                angle = 0;
             }
             return new IntersectionEntity()
             {
@@ -74,7 +78,10 @@ namespace MakeFamilyBoxes.Models
                 Thickness = thickness * 304.8,
                 FromProject = elements.FirstOrDefault().LookupParameter("Из проекта").AsString(),
                 ToProject = elements.FirstOrDefault().LookupParameter("В проект").AsString(),
+                WallAngle = angle
+
             };
+
         }
         public double GetRotationAngle(Element element)
         {
@@ -88,6 +95,25 @@ namespace MakeFamilyBoxes.Models
             }
 
             return 0;
+        }
+        private Solid GetSolidFromGeometry(GeometryElement geometryElement)
+        {
+            foreach (GeometryObject geomObj in geometryElement)
+            {
+                if (geomObj is Solid solid && solid.Volume > 0)
+                {
+                    return solid;
+                }
+                else if (geomObj is GeometryInstance instance)
+                {
+                    GeometryElement instanceGeometry = instance.GetInstanceGeometry();
+                    Solid nestedSolid = GetSolidFromGeometry(instanceGeometry);
+                    if (nestedSolid != null)
+                        return nestedSolid;
+                }
+            }
+
+            return null;
         }
     }
 }

@@ -90,8 +90,7 @@ namespace MakeFamilyBoxes.Services
                         floors.Add(element);
                         if (!StructureDocs.Contains(docum)) StructureDocs.Add(docum);
                         break;
-                    default:
-                        return null;
+
                 }
             }
             IntersectionHelper helper = new();

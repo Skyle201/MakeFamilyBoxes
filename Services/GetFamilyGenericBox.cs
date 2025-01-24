@@ -16,6 +16,7 @@ namespace MakeFamilyBoxes.Services
             {
                 BoxFamilies.Add(new FamilyEntity(fam.Name, int.Parse(fam.Id.ToString())));
             }
+            BoxFamilies.Add(new FamilyEntity(string.Empty,0));
 
             return BoxFamilies;
         }
