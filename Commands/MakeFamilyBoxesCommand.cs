@@ -11,7 +11,7 @@ using MakeFamilyBoxes.Views;
 namespace MakeFamilyBoxes.Commands
 {
 
-    [Transaction(TransactionMode.Manual)]
+    [Autodesk.Revit.Attributes.TransactionAttribute(Autodesk.Revit.Attributes.TransactionMode.Manual)]
     public class MakeFamilyBoxesCommand : IExternalCommand
     {
         public List<Document> Docs;

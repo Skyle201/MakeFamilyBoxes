@@ -42,7 +42,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Resourses\" />
+      <None Remove="Resourses\Icon.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -54,6 +54,12 @@
         <HintPath>..\..\..\..\..\Program Files\Autodesk\Revit 2023\RevitAPIUI.dll</HintPath>
         <Private>False</Private>
       </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="Resourses\Icon.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
     </ItemGroup>
 
     <ItemGroup>
