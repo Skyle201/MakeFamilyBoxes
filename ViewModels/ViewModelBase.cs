@@ -7,6 +7,7 @@ namespace MakeFamilyBoxes.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public Action CloseRequest;
+        public Action SaveJson;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

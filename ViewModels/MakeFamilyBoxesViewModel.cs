@@ -1,11 +1,12 @@
-﻿using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using MakeFamilyBoxes.Commands;
+﻿using MakeFamilyBoxes.Commands;
 using MakeFamilyBoxes.Models;
 using MakeFamilyBoxes.Services;
 using MakeFamilyBoxes.ViewModels.Command;
 using System.Windows;
 using System.Windows.Input;
+using System.Collections.Generic;
+using System.Xml.Serialization;
+using System.Runtime.CompilerServices;
 
 namespace MakeFamilyBoxes.ViewModels
 {
@@ -13,7 +14,7 @@ namespace MakeFamilyBoxes.ViewModels
     public class MakeFamilyBoxesViewModel : ViewModelBase
     {
         private readonly GetRevitDocuments _getRevitDocuments;
-        private bool _isAutoPlacementEnabled = false;
+        private bool _isAutoPlacementEnabled = true;
         private bool _isManualPlacementEnabled = false;
         private bool _isChoosingById = false;
         private bool _isCreateSpecification = false;
@@ -21,7 +22,7 @@ namespace MakeFamilyBoxes.ViewModels
         private string _minSizeOfRoundBox = string.Empty;
         private string _minSizeOfSquareBox = string.Empty;
         private string _boxId = string.Empty;
-        private string _offsetFromCuttingEdge = string.Empty;
+         private string _offsetFromCuttingEdge = string.Empty;
         private List<DocumentEntity> _documentEntities = [];
         private DocumentEntity _selectedHubDocument;
         private DocumentEntity _selectedEngineersDocument;
@@ -30,7 +31,6 @@ namespace MakeFamilyBoxes.ViewModels
         private FamilyEntity _selectedFamilySquareBox;
         private FamilyEntity _selectedFamilyRoundBox;
         private RevitTask _revitTask = new();
-
 
         public bool IsAutoPlacementEnabled
         {
@@ -156,8 +156,8 @@ namespace MakeFamilyBoxes.ViewModels
             get => _selectedHubDocument;
             set
             {
-                _selectedHubDocument = value;
                 GetFamilyEntities(value);
+                _selectedHubDocument = value;
                 OnPropertyChanged(nameof(SelectedHubDocument));
             }
         }
@@ -202,8 +202,8 @@ namespace MakeFamilyBoxes.ViewModels
             get => _selectedFamilyRoundBox;
             set
             {
-                if (value.Name == string.Empty) _selectedFamilyRoundBox = null;
-                else _selectedFamilyRoundBox = value;
+
+                _selectedFamilyRoundBox = value;
                 OnPropertyChanged(nameof(SelectedFamilyRoundBox));
             }
         }
@@ -236,6 +236,7 @@ namespace MakeFamilyBoxes.ViewModels
                         }
                         else
                         {
+                            
                             FindIntersectsService findIntersectsService = new();
                             CreateBoxesService createBoxesService = new();
                             var instance = await _revitTask.Run((uiApp) => createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument, MinSizeOfSquareBox, MinSizeOfRoundBox), SelectedFamilySquareBox, SelectedFamilyRoundBox, OffsetFromCuttingEdge));
@@ -295,6 +296,11 @@ namespace MakeFamilyBoxes.ViewModels
         {
             CloseRequest.Invoke();
         });
+        public void SaveVM()
+        {
+            var VMSaver = new VMSaver();
+            VMSaver.SaveVM(this);
+        }
     }
 
     }

@@ -128,7 +128,6 @@ DisplayMemberPath="Title"  SelectedItem="{Binding SelectedModelDocument}"  IsEna
             <Button Content="Отмена" Width="100" Style="{DynamicResource ActionButtonStyle}" Margin="10,0,0,0"
                     Command ="{Binding CancelCommand}"/>
         </StackPanel>
-        <ProgressBar HorizontalAlignment="Left" Height="10" Margin="10,0,0,0" Grid.Row="2" VerticalAlignment="Center" Width="445"/>
     </Grid>
 
 

@@ -1,4 +1,5 @@
 ﻿using MakeFamilyBoxes.ViewModels;
+using MakeFamilyBoxes.ViewModels.Command;
 
 namespace MakeFamilyBoxes.Views
 {
@@ -8,7 +9,12 @@ namespace MakeFamilyBoxes.Views
         {
             DataContext = viewModel;
             viewModel.CloseRequest = Close;
+            viewModel.SaveJson = viewModel.SaveVM;
             InitializeComponent();
+            Closed += (sender, args) =>
+            {
+                viewModel.SaveJson?.Invoke();
+            };
         }
     }
 }
