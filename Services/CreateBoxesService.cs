@@ -30,13 +30,16 @@ namespace MakeFamilyBoxes.Services
             Document hubDocument = getRevitDocuments.GetDocumentFromEntity(hubDocumentEntity);
             GetFamilyGenericBox getFamilyGenericBox = new(getRevitDocuments);
             bool AllBoxesOn = true;
-            if (SquareBoxEntity == null || RoundBoxEntity == null)
+            if (SquareBoxEntity == null || SquareBoxEntity.Name == string.Empty)
             {
-                if (SquareBoxEntity == null) SquareBoxEntity = RoundBoxEntity;
-                else RoundBoxEntity = SquareBoxEntity;
+                SquareBoxEntity = RoundBoxEntity;
                 AllBoxesOn = false;
             }
-            if (RoundBoxEntity == null) RoundBoxEntity = SquareBoxEntity;
+            if (RoundBoxEntity == null || RoundBoxEntity.Name == string.Empty)
+            {
+                RoundBoxEntity = SquareBoxEntity;
+                AllBoxesOn = false;
+            }
             FamilySymbol SquareBox = getFamilyGenericBox.GetFamilySymbolFromEntity(SquareBoxEntity, hubDocumentEntity);
             FamilySymbol RoundBox = getFamilyGenericBox.GetFamilySymbolFromEntity(RoundBoxEntity, hubDocumentEntity);
             foreach (var intersection in intersections)

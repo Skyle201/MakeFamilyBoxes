@@ -156,6 +156,7 @@ namespace MakeFamilyBoxes.ViewModels
             get => _selectedHubDocument;
             set
             {
+                if (value != null)
                 GetFamilyEntities(value);
                 _selectedHubDocument = value;
                 OnPropertyChanged(nameof(SelectedHubDocument));
@@ -167,7 +168,7 @@ namespace MakeFamilyBoxes.ViewModels
             set
             {
                 _selectedEngineersDocument = value;
-                OnPropertyChanged(nameof(_selectedEngineersDocument));
+                OnPropertyChanged(nameof(SelectedEngineersDocument));
             }
         }
         public DocumentEntity SelectedModelDocument
@@ -176,7 +177,7 @@ namespace MakeFamilyBoxes.ViewModels
             set
             {
                 _selectedModelDocument = value;
-                OnPropertyChanged(nameof(_selectedModelDocument));
+                OnPropertyChanged(nameof(SelectedModelDocument));
             }
         }
         public List<FamilyEntity> FamilyEntities
@@ -236,10 +237,10 @@ namespace MakeFamilyBoxes.ViewModels
                         }
                         else
                         {
-                            
                             FindIntersectsService findIntersectsService = new();
                             CreateBoxesService createBoxesService = new();
-                            var instance = await _revitTask.Run((uiApp) => createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument, MinSizeOfSquareBox, MinSizeOfRoundBox), SelectedFamilySquareBox, SelectedFamilyRoundBox, OffsetFromCuttingEdge));
+                            List<IntersectionEntity> intersections = findIntersectsService.FindIntersects(_getRevitDocuments, SelectedEngineersDocument, SelectedModelDocument, MinSizeOfSquareBox, MinSizeOfRoundBox);
+                            var instance = await _revitTask.Run((uiApp) => createBoxesService.CreateBoxes(_getRevitDocuments, SelectedHubDocument, intersections, SelectedFamilySquareBox, SelectedFamilyRoundBox, OffsetFromCuttingEdge));
                             MessageBox.Show($"Боксы успешно созданы в количестве {createBoxesService.counter} штук");
                         }
                     }
@@ -296,10 +297,16 @@ namespace MakeFamilyBoxes.ViewModels
         {
             CloseRequest.Invoke();
         });
+        public ICommand FactoryResetCommand => new RelayCommand(FactoryReset, null);
         public void SaveVM()
         {
             var VMSaver = new VMSaver();
             VMSaver.SaveVM(this);
+        }
+        private void FactoryReset(object obj)
+        {
+            var VMSaver = new VMSaver();
+            VMSaver.FactoryReset(this);
         }
     }
 

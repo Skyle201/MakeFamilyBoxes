@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Linq;
 using MakeFamilyBoxes.Models;
+using System.Windows.Markup;
 
 public class VMSaver
 {
@@ -70,7 +71,20 @@ public class VMSaver
                 .FirstOrDefault(family => family.Name == data.SelectedSquareBoxName);
         }
     }
+    public void FactoryReset(MakeFamilyBoxesViewModel viewModel)
+    {
+        viewModel.MinSizeOfRoundBox = null;
+        viewModel.MinSizeOfSquareBox = null;
+        viewModel.BoxId = null;
+        viewModel.OffsetFromCuttingEdge = null;
+        viewModel.SelectedFamilyRoundBox = null;
+        viewModel.SelectedFamilySquareBox = null;
+        viewModel.SelectedEngineersDocument = null;
+        viewModel.SelectedModelDocument = null;
+        viewModel.SelectedHubDocument = null;
+    }
 }
+    
 
 public class SavedData
 {

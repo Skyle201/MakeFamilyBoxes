@@ -26,6 +26,7 @@ namespace MakeFamilyBoxes.Services
         }
         public Document GetDocumentFromEntity(DocumentEntity documentEntity)
         {
+            if (documentEntity.Title == string.Empty || documentEntity == null) return null;    
             DocSet = makeFamilyBoxesCommand.Docs;
             foreach (Document doc in DocSet)
             {
