@@ -1,4 +1,4 @@
-﻿namespace MakeFamilyBoxes.Models
+﻿namespace MakeFamilyBoxes.Models.Entities
 {
     public class FamilyEntity(string name, int id)
     {

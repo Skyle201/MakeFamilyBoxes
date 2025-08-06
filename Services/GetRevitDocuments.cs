@@ -1,7 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using MakeFamilyBoxes.Commands;
-using MakeFamilyBoxes.Models;
+using MakeFamilyBoxes.Models.Entities;
 
 namespace MakeFamilyBoxes.Services
 {

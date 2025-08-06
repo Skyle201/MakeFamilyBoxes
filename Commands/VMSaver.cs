@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Linq;
 using MakeFamilyBoxes.Models;
 using System.Windows.Markup;
+using MakeFamilyBoxes.Models.Entities;
 
 public class VMSaver
 {

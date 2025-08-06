@@ -1,7 +1,8 @@
 ﻿using Autodesk.Revit.DB;
+using MakeFamilyBoxes.Models.Helpers;
 using MakeFamilyBoxes.Services;
 
-namespace MakeFamilyBoxes.Models
+namespace MakeFamilyBoxes.Models.Entities
 {
     public class IntersectionEntity
     {
@@ -13,9 +14,9 @@ namespace MakeFamilyBoxes.Models
         public string FromProject { get; set; }
         public string ToProject { get; set; }
         public ShapeEnum Shape { get; set; }
-        public string EngineerPipeType {  get; set; } 
+        public string EngineerPipeType { get; set; }
         public string StructureType { get; set; }
-        public bool VerticalOrNot {  get; set; }
+        public bool VerticalOrNot { get; set; }
         public double WallAngle { get; set; } = 0;
         public enum ShapeEnum
         {
@@ -24,11 +25,11 @@ namespace MakeFamilyBoxes.Models
         };
         public bool IntersectionCheckDims(IntersectionEntity intersection, double minSizeSquareBox, double minSizeRoundBox)
         {
-            if ((intersection.Shape == IntersectionEntity.ShapeEnum.Round) && (intersection.Width < minSizeRoundBox || intersection.Height < minSizeRoundBox))
+            if (intersection.Shape == ShapeEnum.Round && (intersection.Width < minSizeRoundBox || intersection.Height < minSizeRoundBox))
             {
                 return false;
             }
-            else if ((intersection.Shape == IntersectionEntity.ShapeEnum.Rectangular) && (intersection.Width < minSizeSquareBox || intersection.Height < minSizeSquareBox))
+            else if (intersection.Shape == ShapeEnum.Rectangular && (intersection.Width < minSizeSquareBox || intersection.Height < minSizeSquareBox))
             {
                 return false;
             }
@@ -62,7 +63,7 @@ namespace MakeFamilyBoxes.Models
                     double insulation = 0;
                     if (el1.get_Parameter(BuiltInParameter.RBS_REFERENCE_INSULATION_THICKNESS) != null)
                     {
-                        insulation = ((double)el1.get_Parameter(BuiltInParameter.RBS_REFERENCE_INSULATION_THICKNESS)?.AsDouble() * 304.8);
+                        insulation = (double)el1.get_Parameter(BuiltInParameter.RBS_REFERENCE_INSULATION_THICKNESS)?.AsDouble() * 304.8;
                     }
                     XYZ center = helper.GetIntersectionCenter(el1, el2);
                     if (center == null) return null;
@@ -88,4 +89,4 @@ namespace MakeFamilyBoxes.Models
             catch (Exception) { return null; }
         }
     }
-    }
+}

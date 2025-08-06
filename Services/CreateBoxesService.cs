@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.DB;
-using MakeFamilyBoxes.Models;
+using MakeFamilyBoxes.Models.Entities;
+using MakeFamilyBoxes.Models.Helpers;
 using System.Diagnostics;
 using System.Drawing.Text;
 

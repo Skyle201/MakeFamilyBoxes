@@ -1,5 +1,4 @@
 ﻿using MakeFamilyBoxes.Commands;
-using MakeFamilyBoxes.Models;
 using MakeFamilyBoxes.Services;
 using MakeFamilyBoxes.ViewModels.Command;
 using System.Windows;
@@ -7,6 +6,7 @@ using System.Windows.Input;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.Runtime.CompilerServices;
+using MakeFamilyBoxes.Models.Entities;
 
 namespace MakeFamilyBoxes.ViewModels
 {

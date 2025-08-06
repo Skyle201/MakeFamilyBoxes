@@ -1,4 +1,4 @@
-﻿namespace MakeFamilyBoxes.Models
+﻿namespace MakeFamilyBoxes.Models.Entities
 {
     public class DocumentEntity(string title, int id)
     {

@@ -1,9 +1,11 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.DB.Plumbing;
-using static MakeFamilyBoxes.Models.IntersectionEntity;
+using MakeFamilyBoxes.Models.Entities;
+using MakeFamilyBoxes.Models.Extensions;
+using static MakeFamilyBoxes.Models.Entities.IntersectionEntity;
 
-namespace MakeFamilyBoxes.Models
+namespace MakeFamilyBoxes.Models.Helpers
 {
     public class IntersectionHelper
     {
@@ -74,9 +76,9 @@ namespace MakeFamilyBoxes.Models
             XYZ min2 = bbox2.Min;
             XYZ max2 = bbox2.Max;
 
-            return (min1.X <= max2.X && max1.X >= min2.X) &&
-                   (min1.Y <= max2.Y && max1.Y >= min2.Y) &&
-                   (min1.Z <= max2.Z && max1.Z >= min2.Z);
+            return min1.X <= max2.X && max1.X >= min2.X &&
+                   min1.Y <= max2.Y && max1.Y >= min2.Y &&
+                   min1.Z <= max2.Z && max1.Z >= min2.Z;
         }
         public ShapeEnum GetShape(Element el)
         {
@@ -163,32 +165,32 @@ namespace MakeFamilyBoxes.Models
         }
         public List<IntersectionEntity> FindIntersection(
                 List<Document> EngineerDocs,
-                List<Document> StructureDocs, 
-                List<Element> ducts, 
-                List<Element> pipes, 
-                List<Element> cableTrays, 
-                List<Element> walls, 
+                List<Document> StructureDocs,
+                List<Element> ducts,
+                List<Element> pipes,
+                List<Element> cableTrays,
+                List<Element> walls,
                 List<Element> floors,
                 double MinSizeOfSquareBox,
                 double MinSizeOfRoundBox)
-            {
+        {
             HashSet<IntersectionEntity> Intersections = new(new IntersectionEntityComparer());
 
-                foreach (Document engineerDoc in EngineerDocs)
+            foreach (Document engineerDoc in EngineerDocs)
+            {
+                foreach (Document structureDoc in StructureDocs)
                 {
-                    foreach (Document structureDoc in StructureDocs)
-                    {
-                    
-                        ProcessElements(ducts, walls, engineerDoc, structureDoc, MinSizeOfSquareBox, MinSizeOfRoundBox, Intersections);
-                        ProcessElements(ducts, floors, engineerDoc, structureDoc, MinSizeOfSquareBox, MinSizeOfRoundBox, Intersections);
-                        ProcessElements(pipes, walls, engineerDoc, structureDoc, MinSizeOfSquareBox, MinSizeOfRoundBox, Intersections);
-                        ProcessElements(pipes, floors, engineerDoc, structureDoc, MinSizeOfSquareBox, MinSizeOfRoundBox, Intersections);
-                        ProcessElements(cableTrays, walls, engineerDoc, structureDoc, MinSizeOfSquareBox, MinSizeOfRoundBox, Intersections);
-                        ProcessElements(cableTrays, floors, engineerDoc, structureDoc, MinSizeOfSquareBox, MinSizeOfRoundBox, Intersections);
-                    }
+
+                    ProcessElements(ducts, walls, engineerDoc, structureDoc, MinSizeOfSquareBox, MinSizeOfRoundBox, Intersections);
+                    ProcessElements(ducts, floors, engineerDoc, structureDoc, MinSizeOfSquareBox, MinSizeOfRoundBox, Intersections);
+                    ProcessElements(pipes, walls, engineerDoc, structureDoc, MinSizeOfSquareBox, MinSizeOfRoundBox, Intersections);
+                    ProcessElements(pipes, floors, engineerDoc, structureDoc, MinSizeOfSquareBox, MinSizeOfRoundBox, Intersections);
+                    ProcessElements(cableTrays, walls, engineerDoc, structureDoc, MinSizeOfSquareBox, MinSizeOfRoundBox, Intersections);
+                    ProcessElements(cableTrays, floors, engineerDoc, structureDoc, MinSizeOfSquareBox, MinSizeOfRoundBox, Intersections);
                 }
-            return Intersections.ToList();
             }
+            return Intersections.ToList();
+        }
 
 
         private void ProcessElements(
@@ -199,19 +201,19 @@ namespace MakeFamilyBoxes.Models
     double MinSizeOfSquareBox,
     double MinSizeOfRoundBox,
     HashSet<IntersectionEntity> intersections)
-{
-    foreach (var engineerElement in engineerElements)
-    {
-        foreach (var structureElement in structureElements)
         {
+            foreach (var engineerElement in engineerElements)
+            {
+                foreach (var structureElement in structureElements)
+                {
                     IntersectionEntity intersection = new();
                     intersection = intersection.TryCreateEntity(engineerElement, structureElement, engineerDoc, structureDoc);
-            if (intersection != null && intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
-            {
-                intersections.Add(intersection);
+                    if (intersection != null && intersection.IntersectionCheckDims(intersection, MinSizeOfSquareBox, MinSizeOfRoundBox))
+                    {
+                        intersections.Add(intersection);
+                    }
+                }
             }
         }
-    }
-}
     }
 }

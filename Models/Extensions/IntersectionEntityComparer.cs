@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Media3D;
 using System.Windows;
+using MakeFamilyBoxes.Models.Entities;
 
-namespace MakeFamilyBoxes.Models
+namespace MakeFamilyBoxes.Models.Extensions
 {
     public class IntersectionEntityComparer : IEqualityComparer<IntersectionEntity>
     {

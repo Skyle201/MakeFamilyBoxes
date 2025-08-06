@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using MakeFamilyBoxes.Models;
+using MakeFamilyBoxes.Models.Entities;
+using MakeFamilyBoxes.Models.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
